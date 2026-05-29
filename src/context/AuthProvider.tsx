@@ -27,6 +27,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const initKeycloak = useCallback(async () => {
+    const keycloakUrl = import.meta.env.VITE_KEYCLOAK_URL;
+    const realm = import.meta.env.VITE_KEYCLOAK_REALM;
+    const clientId = import.meta.env.VITE_KEYCLOAK_CLIENT_ID;
+
+    if (!keycloakUrl || !realm || !clientId) {
+      console.warn(
+        'Keycloak env vars (VITE_KEYCLOAK_URL / VITE_KEYCLOAK_REALM / VITE_KEYCLOAK_CLIENT_ID) ' +
+          'are not set. Skipping Keycloak initialisation.'
+      );
+      setIsLoading(false);
+      return;
+    }
+
     try {
       console.log('Initializing Keycloak...');
       const authenticated = await keycloak.init({
@@ -70,9 +83,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = useCallback(() => {
     console.log('Login called, redirecting to Keycloak...');
     keycloak.login({
-      redirectUri: appBaseUrl,
+      redirectUri: window.location.origin + window.location.pathname,
     });
-  }, [appBaseUrl]);
+  }, []);
 
   const getToken = (): string | undefined => {
     return keycloak.token;

@@ -12,15 +12,15 @@ interface CredentialOffer {
 }
 
 export const CredentialConfigurationId = {
-  DATEV_COMPANY: 'DatevCompanyCredential',
+  PAYSLIP: 'PayslipCredential',
 } as const;
 
 export const DEFAULT_CREDENTIAL_CONFIGURATION_ID =
   import.meta.env.VITE_OID4VC_DEFAULT_CREDENTIAL_CONFIGURATION_ID ||
-  CredentialConfigurationId.DATEV_COMPANY;
+  CredentialConfigurationId.PAYSLIP;
 
 const EndpointType = {
-  KEYCLOAK_26_6_0: 'keycloak_26_6_0',
+  KEYCLOAK_26_6_1: 'keycloak_26_6_1',
   PRE_KEYCLOAK_26_6_0: 'pre_keycloak_26_6_0',
 } as const;
 
@@ -93,13 +93,13 @@ class Oid4vcService {
     credentialConfigurationId: string = DEFAULT_CREDENTIAL_CONFIGURATION_ID
   ): Promise<string> {
     return this.withFallback(
-      () => this.getCredentialOfferUriKeycloak26_6_0(credentialConfigurationId),
+      () => this.getCredentialOfferUriKeycloak26_6_1(credentialConfigurationId),
       () => this.getCredentialOfferUriPreKeycloak26_6_0(credentialConfigurationId),
       'CredentialOfferUri'
     );
   }
 
-  private async getCredentialOfferUriKeycloak26_6_0(
+  private async getCredentialOfferUriKeycloak26_6_1(
     credentialConfigurationId: string
   ): Promise<string> {
     const queryParams: QueryParams = {
@@ -111,7 +111,7 @@ class Oid4vcService {
     return this.fetchCredentialOfferUri(
       Oid4vcService.ENDPOINTS.CREATE_CREDENTIAL_OFFER,
       queryParams,
-      EndpointType.KEYCLOAK_26_6_0
+      EndpointType.KEYCLOAK_26_6_1
     );
   }
 
@@ -217,13 +217,13 @@ class Oid4vcService {
     credentialConfigurationId: string = DEFAULT_CREDENTIAL_CONFIGURATION_ID
   ): Promise<Blob> {
     return this.withFallback(
-      () => this.getCredentialOfferPngKeycloak26_6_0(credentialConfigurationId),
+      () => this.getCredentialOfferPngKeycloak26_6_1(credentialConfigurationId),
       () => this.getCredentialOfferPngPreKeycloak26_6_0(credentialConfigurationId),
       'CredentialOfferPng'
     );
   }
 
-  private async getCredentialOfferPngKeycloak26_6_0(
+  private async getCredentialOfferPngKeycloak26_6_1(
     credentialConfigurationId: string
   ): Promise<Blob> {
     const queryParams: QueryParams = {
@@ -236,7 +236,7 @@ class Oid4vcService {
     return this.fetchCredentialOfferPng(
       Oid4vcService.ENDPOINTS.CREATE_CREDENTIAL_OFFER,
       queryParams,
-      EndpointType.KEYCLOAK_26_6_0
+      EndpointType.KEYCLOAK_26_6_1
     );
   }
 
