@@ -113,6 +113,7 @@ const Dashboard = () => {
   // ---------------------------------------------------------------------------
   return (
     <div
+      className="dashboard-container"
       style={{
         height: '100vh',
         display: 'flex',
@@ -127,6 +128,7 @@ const Dashboard = () => {
       {/* Header                                                               */}
       {/* ------------------------------------------------------------------ */}
       <header
+        className="dashboard-header"
         style={{
           backgroundColor: '#fff',
           padding: '0 32px',
@@ -153,10 +155,14 @@ const Dashboard = () => {
         </div>
 
         {/* Tab navigation (read-only – tabs are decorative only) */}
-        <nav style={{ display: 'flex', height: '56px' }}>
+        <nav
+          className="header-nav"
+          style={{ display: 'flex', height: '56px' }}
+        >
           {tabs.map((t) => (
             <span
               key={t.key}
+              className="header-nav-tab"
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -165,7 +171,7 @@ const Dashboard = () => {
                 color: t.active ? '#111827' : '#6b7280',
                 fontWeight: t.active ? 600 : 400,
                 fontSize: '0.9rem',
-                borderBottom: t.active ? '3px solid #16a34a' : '3px solid transparent',
+                borderBottom: t.active ? '3px solid #9ece50' : '3px solid transparent',
                 cursor: 'default',
                 userSelect: 'none',
               }}
@@ -176,7 +182,10 @@ const Dashboard = () => {
         </nav>
 
         {/* User avatar + name + logout */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div
+          className="user-section"
+          style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
+        >
           <div
             style={{
               width: '30px',
@@ -194,7 +203,10 @@ const Dashboard = () => {
           >
             {initials}
           </div>
-          <span style={{ color: '#111827', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>
+          <span
+            className="user-name"
+            style={{ color: '#111827', fontSize: '0.85rem', whiteSpace: 'nowrap' }}
+          >
             {fullName}
           </span>
           <span style={{ color: '#6b7280', fontSize: '0.75rem' }}>▾</span>
@@ -221,6 +233,7 @@ const Dashboard = () => {
       {/* Page content                                                         */}
       {/* ------------------------------------------------------------------ */}
       <main
+        className="dashboard-main"
         style={{
           flex: 1,
           maxWidth: '1100px',
@@ -238,7 +251,7 @@ const Dashboard = () => {
             background: 'none',
             border: 'none',
             cursor: 'pointer',
-            color: '#0d9488',
+            color: '#039A9A',
             fontSize: '0.85rem',
             display: 'flex',
             alignItems: 'center',
@@ -270,10 +283,10 @@ const Dashboard = () => {
               alignItems: 'center',
               gap: '4px',
               padding: '2px 10px',
-              backgroundColor: '#f0fdf4',
-              border: '1px solid #bbf7d0',
+              backgroundColor: '#f5faee',
+              border: '1px solid #e3f0ce',
               borderRadius: '999px',
-              color: '#16a34a',
+              color: '#4a701b',
               fontSize: '0.75rem',
               fontWeight: 600,
             }}
@@ -290,6 +303,7 @@ const Dashboard = () => {
         {/* Two-column body                                                   */}
         {/* ---------------------------------------------------------------- */}
         <div
+          className="content-grid"
           style={{
             display: 'grid',
             gridTemplateColumns: '1fr 340px',
@@ -333,7 +347,10 @@ const Dashboard = () => {
                   justifyContent: 'space-between',
                 }}
               >
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 24px' }}>
+                <div
+                  className="details-grid"
+                  style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 24px' }}
+                >
                   <DetailField icon={<User size={16} />} label="Arbeitnehmer" value={fullName} />
                   <DetailField
                     icon={<Wallet size={16} />}
@@ -349,7 +366,7 @@ const Dashboard = () => {
                     icon={<Banknote size={16} />}
                     label="Nettogehalt"
                     value={`${PAYSLIP.netSalary} EUR`}
-                    valueColor="#16a34a"
+                    valueColor="#4a701b"
                   />
                   <DetailField
                     icon={<CalendarDays size={16} />}
@@ -427,7 +444,10 @@ const Dashboard = () => {
               <h3 style={{ margin: '0 0 10px', fontSize: '0.95rem', fontWeight: 700 }}>
                 Wofür können Sie diesen Nachweis verwenden?
               </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
+              <div
+                className="use-cases-grid"
+                style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}
+              >
                 {useCases.map((uc) => (
                   <div
                     key={uc.title}
@@ -460,9 +480,9 @@ const Dashboard = () => {
           {/* ------------------------------------------------------------ */}
           <div
             style={{
-              backgroundColor: '#f0fdf4',
+              backgroundColor: '#f5faee',
               borderRadius: '12px',
-              border: '1px solid #dcfce7',
+              border: '1px solid #e3f0ce',
               overflow: 'hidden',
               display: 'flex',
               flexDirection: 'column',
@@ -476,8 +496,8 @@ const Dashboard = () => {
                 gap: '8px',
               }}
             >
-              <ShieldCheck size={18} color="#15803d" />
-              <h2 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, color: '#15803d' }}>
+              <ShieldCheck size={18} color="#4a701b" />
+              <h2 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, color: '#4a701b' }}>
                 In EUDI-Wallet übernehmen
               </h2>
             </div>
@@ -493,7 +513,7 @@ const Dashboard = () => {
               <p
                 style={{
                   margin: '0 0 10px',
-                  color: '#166534',
+                  color: '#3b5914',
                   fontSize: '0.82rem',
                   lineHeight: 1.3,
                 }}
@@ -524,7 +544,7 @@ const Dashboard = () => {
                         height: '32px',
                         margin: '0 auto 8px',
                         border: '3px solid #e5e7eb',
-                        borderTop: '3px solid #16a34a',
+                        borderTop: '3px solid #9ece50',
                         borderRadius: '50%',
                         animation: 'spin 1s linear infinite',
                       }}
@@ -540,7 +560,7 @@ const Dashboard = () => {
                     <button
                       onClick={loadOffer}
                       style={{
-                        backgroundColor: '#16a34a',
+                        backgroundColor: '#4C7B16',
                         color: '#fff',
                         border: 'none',
                         padding: '6px 12px',
@@ -557,6 +577,7 @@ const Dashboard = () => {
                 {!isLoading && !error && offerDeeplink && (
                   <>
                     <div
+                      className="qr-code-wrapper"
                       style={{
                         backgroundColor: '#fff',
                         padding: '6px',
@@ -576,8 +597,8 @@ const Dashboard = () => {
                       style={{
                         marginTop: '8px',
                         background: 'none',
-                        border: '1px solid #16a34a',
-                        color: '#16a34a',
+                        border: '1px solid #9ece50',
+                        color: '#4a701b',
                         borderRadius: '6px',
                         padding: '6px 12px',
                         cursor: 'pointer',
@@ -588,12 +609,12 @@ const Dashboard = () => {
                         textAlign: 'center',
                       }}
                       onMouseOver={(e) => {
-                        e.currentTarget.style.backgroundColor = '#16a34a';
+                        e.currentTarget.style.backgroundColor = '#9ece50';
                         e.currentTarget.style.color = '#fff';
                       }}
                       onMouseOut={(e) => {
                         e.currentTarget.style.backgroundColor = 'transparent';
-                        e.currentTarget.style.color = '#16a34a';
+                        e.currentTarget.style.color = '#4a701b';
                       }}
                     >
                       Code aktualisieren
@@ -635,7 +656,7 @@ const Dashboard = () => {
                         width: '18px',
                         height: '18px',
                         borderRadius: '50%',
-                        backgroundColor: '#16a34a',
+                        backgroundColor: '#4C7B16',
                         color: '#fff',
                         display: 'flex',
                         alignItems: 'center',
@@ -653,8 +674,8 @@ const Dashboard = () => {
 
               {/* Trust note */}
               <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <ShieldCheck size={14} color="#15803d" />
-                <span style={{ color: '#15803d', fontSize: '0.75rem', fontWeight: 600 }}>
+                <ShieldCheck size={14} color="#4a701b" />
+                <span style={{ color: '#4a701b', fontSize: '0.75rem', fontWeight: 600 }}>
                   Sicher. Verifiziert. In Ihrer Kontrolle.
                 </span>
               </div>
@@ -684,7 +705,7 @@ const Dashboard = () => {
         <span>
           Dieser Service wird bereitgestellt von DATEV. Rechtliche Hinweise und Datenschutz finden
           Sie in unserer{' '}
-          <a href="#" style={{ color: '#0d9488', textDecoration: 'underline' }}>
+          <a href="#" style={{ color: '#039A9A', textDecoration: 'underline' }}>
             Datenschutzerklärung
           </a>
           .
@@ -692,10 +713,80 @@ const Dashboard = () => {
       </footer>
 
       {/* Keyframe for spinner */}
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 768px) {
+          .dashboard-container {
+            height: auto !important;
+            min-height: 100vh;
+            overflow: auto !important;
+          }
+          .dashboard-header {
+            padding: 8px 16px !important;
+            height: auto !important;
+            flex-wrap: wrap;
+            gap: 12px;
+          }
+          .header-nav {
+            order: 3;
+            width: 100%;
+            justify-content: center;
+            height: auto !important;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 8px;
+            margin-top: 4px;
+          }
+          .header-nav-tab {
+            padding: 8px 12px !important;
+            font-size: 0.8rem !important;
+            border-bottom-width: 2px !important;
+          }
+          .user-section {
+            gap: 8px !important;
+          }
+          .user-name {
+            display: none !important;
+          }
+          .dashboard-main {
+            padding: 12px 12px !important;
+          }
+          .content-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .details-grid {
+            grid-template-columns: 1fr !important;
+            gap: 12px 16px !important;
+          }
+          .use-cases-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+          .qr-code-wrapper {
+            max-width: 240px !important;
+            margin: 0 auto !important;
+          }
+          .playground-notice {
+            position: static !important;
+            margin: 16px auto 0 !important;
+            width: 100% !important;
+            max-width: 320px !important;
+            box-shadow: none !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .use-cases-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .title-row h1 {
+            font-size: 1.3rem !important;
+          }
+        }
+      `}</style>
 
       {/* Experimental Playground Notice */}
       <div
+        className="playground-notice"
         style={{
           position: 'fixed',
           bottom: '12px',

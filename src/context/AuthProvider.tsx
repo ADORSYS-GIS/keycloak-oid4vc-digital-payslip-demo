@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (!keycloakUrl || !realm || !clientId) {
       console.warn(
         'Keycloak env vars (VITE_KEYCLOAK_URL / VITE_KEYCLOAK_REALM / VITE_KEYCLOAK_CLIENT_ID) ' +
-          'are not set. Skipping Keycloak initialisation.'
+        'are not set. Skipping Keycloak initialisation.'
       );
       setIsLoading(false);
       return;
@@ -47,8 +47,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         pkceMethod: 'S256',
         checkLoginIframe: false,
         enableLogging: true,
-        // Explicitly set redirect URI to app base URL
-        redirectUri: appBaseUrl,
+        // Explicitly set redirect URI to current URL
+        redirectUri: window.location.origin + window.location.pathname,
       });
 
       console.log('Authenticated via init:', authenticated);
@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(false);
       console.log('Keycloak initialization finished.');
     }
-  }, [loadUserProfile, logout, appBaseUrl]);
+  }, [loadUserProfile, logout]);
 
   useEffect(() => {
     if (isKeycloakInitialized.current) {
@@ -83,9 +83,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = useCallback(() => {
     console.log('Login called, redirecting to Keycloak...');
     keycloak.login({
-      redirectUri: appBaseUrl,
+      redirectUri: window.location.origin + window.location.pathname,
     });
-  }, [appBaseUrl]);
+  }, []);
 
   const getToken = (): string | undefined => {
     return keycloak.token;
