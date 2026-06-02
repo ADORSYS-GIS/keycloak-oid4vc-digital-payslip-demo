@@ -1,43 +1,29 @@
-import { BrowserRouter } from 'react-router-dom';
-import { useAuth } from './context/AuthContext';
-import { AuthProvider } from './context/AuthProvider';
-import ProtectedRoute from './components/ProtectedRoute';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
-
-function AppRoutes() {
-  const { isAuthenticated, isLoading } = useAuth();
-
-  if (isLoading) {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-        }}
-      >
-        <h2>Loading...</h2>
-      </div>
-    );
-  }
-
-  return isAuthenticated ? (
-    <ProtectedRoute>
-      <Dashboard />
-    </ProtectedRoute>
-  ) : (
-    <Login />
-  );
-}
+import ProtectedRoute from './components/ProtectedRoute';
+import { AuthProvider } from './context/AuthProvider';
 
 function App() {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
-      <AuthProvider>
-        <AppRoutes />
-      </AuthProvider>
+      <Routes>
+        {/* Public landing page – no Keycloak init */}
+        <Route path="/" element={<Login />} />
+
+        {/* Protected area – Keycloak is initialised only when the user
+            navigates here (i.e. after clicking a button on the landing page) */}
+        <Route
+          path="/dashboard"
+          element={
+            <AuthProvider>
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            </AuthProvider>
+          }
+        />
+      </Routes>
     </BrowserRouter>
   );
 }
