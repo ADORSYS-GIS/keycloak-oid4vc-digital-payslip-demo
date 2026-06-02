@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (!keycloakUrl || !realm || !clientId) {
       console.warn(
         'Keycloak env vars (VITE_KEYCLOAK_URL / VITE_KEYCLOAK_REALM / VITE_KEYCLOAK_CLIENT_ID) ' +
-        'are not set. Skipping Keycloak initialisation.'
+          'are not set. Skipping Keycloak initialisation.'
       );
       setIsLoading(false);
       return;

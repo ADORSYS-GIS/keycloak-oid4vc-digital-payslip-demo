@@ -155,10 +155,7 @@ const Dashboard = () => {
         </div>
 
         {/* Tab navigation (read-only – tabs are decorative only) */}
-        <nav
-          className="header-nav"
-          style={{ display: 'flex', height: '56px' }}
-        >
+        <nav className="header-nav" style={{ display: 'flex', height: '56px' }}>
           {tabs.map((t) => (
             <span
               key={t.key}
