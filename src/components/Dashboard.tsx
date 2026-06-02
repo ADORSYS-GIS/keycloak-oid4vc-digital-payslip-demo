@@ -47,7 +47,6 @@ const Dashboard = () => {
   const [offerDeeplink, setOfferDeeplink] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState('gehaltsnachweise');
 
   // Derive display name from Keycloak profile
   const firstName = userProfile?.firstName ?? '';
@@ -78,9 +77,9 @@ const Dashboard = () => {
   // Tab nav items
   // ---------------------------------------------------------------------------
   const tabs = [
-    { key: 'uebersicht', label: 'Übersicht' },
-    { key: 'gehaltsnachweise', label: 'Gehaltsnachweise' },
-    { key: 'verlauf', label: 'Verlauf' },
+    { key: 'uebersicht', label: 'Übersicht', active: false },
+    { key: 'gehaltsnachweise', label: 'Gehaltsnachweise', active: true },
+    { key: 'verlauf', label: 'Verlauf', active: false },
   ];
 
   // ---------------------------------------------------------------------------
@@ -153,27 +152,26 @@ const Dashboard = () => {
           </span>
         </div>
 
-        {/* Tab navigation */}
+        {/* Tab navigation (read-only – tabs are decorative only) */}
         <nav style={{ display: 'flex', height: '56px' }}>
           {tabs.map((t) => (
-            <button
+            <span
               key={t.key}
-              onClick={() => setActiveTab(t.key)}
               style={{
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
                 padding: '0 20px',
                 height: '100%',
-                color: activeTab === t.key ? '#111827' : '#6b7280',
-                fontWeight: activeTab === t.key ? 600 : 400,
+                color: t.active ? '#111827' : '#6b7280',
+                fontWeight: t.active ? 600 : 400,
                 fontSize: '0.9rem',
-                borderBottom: activeTab === t.key ? '3px solid #16a34a' : '3px solid transparent',
-                transition: 'color 0.2s, border-color 0.2s',
+                borderBottom: t.active ? '3px solid #16a34a' : '3px solid transparent',
+                cursor: 'default',
+                userSelect: 'none',
               }}
             >
               {t.label}
-            </button>
+            </span>
           ))}
         </nav>
 
@@ -511,6 +509,7 @@ const Dashboard = () => {
                   borderRadius: '8px',
                   padding: '10px',
                   display: 'flex',
+                  flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
                   flex: 1,
@@ -556,20 +555,50 @@ const Dashboard = () => {
                   </div>
                 )}
                 {!isLoading && !error && offerDeeplink && (
-                  <div
-                    style={{
-                      backgroundColor: '#fff',
-                      padding: '6px',
-                      borderRadius: '6px',
-                      width: '100%',
-                    }}
-                  >
-                    <QRCode
-                      value={offerDeeplink}
-                      size={256}
-                      style={{ height: 'auto', maxWidth: '100%', width: '100%' }}
-                    />
-                  </div>
+                  <>
+                    <div
+                      style={{
+                        backgroundColor: '#fff',
+                        padding: '6px',
+                        borderRadius: '6px',
+                        width: '100%',
+                      }}
+                    >
+                      <QRCode
+                        value={offerDeeplink}
+                        size={256}
+                        style={{ height: 'auto', maxWidth: '100%', width: '100%' }}
+                        viewBox="0 0 256 256"
+                      />
+                    </div>
+                    <button
+                      onClick={loadOffer}
+                      style={{
+                        marginTop: '8px',
+                        background: 'none',
+                        border: '1px solid #16a34a',
+                        color: '#16a34a',
+                        borderRadius: '6px',
+                        padding: '6px 12px',
+                        cursor: 'pointer',
+                        fontSize: '0.8rem',
+                        fontWeight: 600,
+                        transition: 'background-color 0.2s, color 0.2s',
+                        width: '100%',
+                        textAlign: 'center',
+                      }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.backgroundColor = '#16a34a';
+                        e.currentTarget.style.color = '#fff';
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                        e.currentTarget.style.color = '#16a34a';
+                      }}
+                    >
+                      Code aktualisieren
+                    </button>
+                  </>
                 )}
               </div>
 

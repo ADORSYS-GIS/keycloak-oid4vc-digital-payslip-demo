@@ -6,7 +6,7 @@ import { AuthProvider } from './context/AuthProvider';
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Routes>
         {/* Public landing page – no Keycloak init */}
         <Route path="/" element={<Login />} />

@@ -47,8 +47,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         pkceMethod: 'S256',
         checkLoginIframe: false,
         enableLogging: true,
-        // Explicitly set redirect URI to current URL
-        redirectUri: window.location.origin + window.location.pathname,
+        // Explicitly set redirect URI to app base URL
+        redirectUri: appBaseUrl,
       });
 
       console.log('Authenticated via init:', authenticated);
@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(false);
       console.log('Keycloak initialization finished.');
     }
-  }, [loadUserProfile, logout]);
+  }, [loadUserProfile, logout, appBaseUrl]);
 
   useEffect(() => {
     if (isKeycloakInitialized.current) {
@@ -83,9 +83,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = useCallback(() => {
     console.log('Login called, redirecting to Keycloak...');
     keycloak.login({
-      redirectUri: window.location.origin + window.location.pathname,
+      redirectUri: appBaseUrl,
     });
-  }, []);
+  }, [appBaseUrl]);
 
   const getToken = (): string | undefined => {
     return keycloak.token;

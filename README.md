@@ -38,7 +38,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Configuration
 
-1. Using `.env.example` as a template, create a `.env` file in the root of the project and update the variables with your specific Keycloak coordinates:
+1. Using `.env.example` as a template, create a `.env` file in the root of the project and update the variables with the correct values:
    ```bash
    cp .env.example .env
    ```
@@ -51,7 +51,7 @@ To start the development server, run the following command:
 npm run dev
 ```
 
-The application will be available at the port configured by Vite (usually `http://localhost:4200` or `http://localhost:5173`).
+The application will be available at the port configured by Vite (usually `http://localhost:4200`).
 
 ## Available Scripts
 
