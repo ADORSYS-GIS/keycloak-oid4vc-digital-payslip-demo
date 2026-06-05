@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
+import LoanApplication from './components/LoanApplication';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthProvider';
 
@@ -19,6 +20,16 @@ function App() {
             <AuthProvider>
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            </AuthProvider>
+          }
+        />
+        <Route
+          path="/kreditantrag"
+          element={
+            <AuthProvider>
+              <ProtectedRoute>
+                <LoanApplication />
               </ProtectedRoute>
             </AuthProvider>
           }

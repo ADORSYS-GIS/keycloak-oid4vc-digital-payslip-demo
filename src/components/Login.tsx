@@ -80,6 +80,7 @@ const Login = () => {
               type="button"
               style={demoButtonStyle}
               title="Demo-Platzhalter fuer den Verifikationsablauf eines Kreditantrags"
+              onClick={() => navigate('/kreditantrag')}
               onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#9adb3c')}
               onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#AAE651')}
             >
