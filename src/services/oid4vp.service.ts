@@ -14,13 +14,15 @@ async function sha256(plain: string): Promise<ArrayBuffer> {
 }
 
 function base64urlencode(buffer: ArrayBuffer): string {
-  let str = '';
   const bytes = new Uint8Array(buffer);
-  const len = bytes.byteLength;
-  for (let i = 0; i < len; i++) {
-    str += String.fromCharCode(bytes[i]);
+  const chunkSize = 0x8000;
+  let binary = '';
+
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
   }
-  return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
 export async function generateCodeChallenge(): Promise<{ verifier: string; challenge: string }> {
@@ -35,11 +37,15 @@ export interface PresentationRequestResult {
   transaction_id: string;
 }
 
+export type PresentationStatus = 'pending' | 'SUCCESS' | 'ERROR';
+
 export interface PresentationStatusResult {
-  status: 'pending' | 'SUCCESS' | 'ERROR' | string;
+  status: PresentationStatus;
   error?: string;
   errorDescription?: string;
 }
+
+const PKCE_CODE_VERIFIER_STORAGE_KEY = 'oid4vp_pkce_code_verifier';
 
 class Oid4vpService {
   private getBaseUrl(): string {
@@ -52,10 +58,28 @@ class Oid4vpService {
     return import.meta.env.VITE_KEYCLOAK_CLIENT_ID || 'oid4vc-demo-public';
   }
 
+  storeCodeVerifier(verifier: string): void {
+    sessionStorage.setItem(PKCE_CODE_VERIFIER_STORAGE_KEY, verifier);
+  }
+
+  getStoredCodeVerifier(): string | null {
+    return sessionStorage.getItem(PKCE_CODE_VERIFIER_STORAGE_KEY);
+  }
+
+  clearStoredCodeVerifier(): void {
+    sessionStorage.removeItem(PKCE_CODE_VERIFIER_STORAGE_KEY);
+  }
+
   async createPresentationRequest(): Promise<PresentationRequestResult> {
-    const { challenge } = await generateCodeChallenge();
-    const clientId = this.getClientId();
-    const url = `${this.getBaseUrl()}/oid4vp-auth/request?client_id=${clientId}&code_challenge=${challenge}&code_challenge_method=S256`;
+    const { verifier, challenge } = await generateCodeChallenge();
+    this.storeCodeVerifier(verifier);
+
+    const queryParams = new URLSearchParams({
+      client_id: this.getClientId(),
+      code_challenge: challenge,
+      code_challenge_method: 'S256',
+    });
+    const url = `${this.getBaseUrl()}/oid4vp-auth/request?${queryParams.toString()}`;
 
     const response = await fetch(url, {
       method: 'GET',

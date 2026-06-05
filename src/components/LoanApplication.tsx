@@ -1,311 +1,36 @@
 import { useEffect, useState } from 'react';
+import {
+  ArrowLeftRight,
+  Bell,
+  Check,
+  ChevronDown,
+  Clock,
+  CreditCard,
+  File,
+  FileText,
+  Home,
+  Landmark,
+  Lock,
+  Mail,
+  Phone,
+  QrCode,
+  RefreshCw,
+  Settings,
+  Smartphone,
+} from 'lucide-react';
 import QRCode from 'react-qr-code';
-import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 import oid4vpService from '../services/oid4vp.service';
 
-/* ─────────────────────────── tiny SVG icon helpers ─────────────────────────── */
-const Icon = {
-  Home: () => (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-      <polyline points="9 22 9 12 15 12 15 22" />
-    </svg>
-  ),
-  CreditCard: () => (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
-      <line x1="1" y1="10" x2="23" y2="10" />
-    </svg>
-  ),
-  ArrowLeftRight: () => (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="17 1 21 5 17 9" />
-      <path d="M3 11V9a4 4 0 0 1 4-4h14" />
-      <polyline points="7 23 3 19 7 15" />
-      <path d="M21 13v2a4 4 0 0 1-4 4H3" />
-    </svg>
-  ),
-  Clock: () => (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="10" />
-      <polyline points="12 6 12 12 16 14" />
-    </svg>
-  ),
-  Card: () => (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect x="2" y="5" width="20" height="14" rx="2" />
-      <line x1="2" y1="10" x2="22" y2="10" />
-    </svg>
-  ),
-  Bank: () => (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="3" y1="22" x2="21" y2="22" />
-      <line x1="6" y1="18" x2="6" y2="11" />
-      <line x1="10" y1="18" x2="10" y2="11" />
-      <line x1="14" y1="18" x2="14" y2="11" />
-      <line x1="18" y1="18" x2="18" y2="11" />
-      <polygon points="12 2 20 7 4 7" />
-    </svg>
-  ),
-  File: () => (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14 2 14 8 20 8" />
-    </svg>
-  ),
-  Mail: () => (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-      <polyline points="22,6 12,13 2,6" />
-    </svg>
-  ),
-  Settings: () => (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="3" />
-      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-    </svg>
-  ),
-  Bell: () => (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-    </svg>
-  ),
-  Envelope: () => (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-      <polyline points="22,6 12,13 2,6" />
-    </svg>
-  ),
-  ChevronDown: () => (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="6 9 12 15 18 9" />
-    </svg>
-  ),
-  Phone: () => (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.56 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-    </svg>
-  ),
-  Smartphone: () => (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
-      <line x1="12" y1="18" x2="12.01" y2="18" />
-    </svg>
-  ),
-  QrCode: () => (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect x="3" y="3" width="7" height="7" />
-      <rect x="14" y="3" width="7" height="7" />
-      <rect x="3" y="14" width="7" height="7" />
-      <rect x="14" y="14" width="3" height="3" />
-      <line x1="20" y1="14" x2="20" y2="14" />
-      <line x1="20" y1="20" x2="20" y2="20" />
-      <line x1="14" y1="20" x2="17" y2="20" />
-    </svg>
-  ),
-  FileText: () => (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14 2 14 8 20 8" />
-      <line x1="16" y1="13" x2="8" y2="13" />
-      <line x1="16" y1="17" x2="8" y2="17" />
-      <polyline points="10 9 9 9 8 9" />
-    </svg>
-  ),
-  Lock: () => (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-    </svg>
-  ),
-  Refresh: () => (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="23 4 23 10 17 10" />
-      <polyline points="1 20 1 14 7 14" />
-      <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
-    </svg>
-  ),
-  Check: () => (
-    <svg
-      width="36"
-      height="36"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="3"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="20 6 9 17 4 12" />
-    </svg>
-  ),
-};
+const PRESENTATION_POLL_INTERVAL_MS = 2000;
+const PRESENTATION_REQUEST_TIMEOUT_MS = 5 * 60 * 1000;
+const PRESENTATION_TIMEOUT_MESSAGE =
+  'Der QR-Code ist abgelaufen. Bitte aktualisieren Sie den Code und versuchen Sie es erneut.';
 
 /* ─────────────────────────── component ─────────────────────────── */
 const LoanApplication = () => {
+  const navigate = useNavigate();
   const { userProfile, logout } = useAuth();
   const [qrPayload, setQrPayload] = useState<string | null>(null);
   const [status, setStatus] = useState<'loading' | 'requesting' | 'pending' | 'success' | 'error'>(
@@ -347,22 +72,47 @@ const LoanApplication = () => {
 
   useEffect(() => {
     if (status !== 'pending' || !transactionId) return;
+    let isActive = true;
+    let isPolling = false;
+    const startedAt = Date.now();
+
     const interval = setInterval(async () => {
+      if (Date.now() - startedAt >= PRESENTATION_REQUEST_TIMEOUT_MS) {
+        if (isActive) {
+          setStatus('error');
+          setErrorMessage(PRESENTATION_TIMEOUT_MESSAGE);
+        }
+        clearInterval(interval);
+        return;
+      }
+
+      if (isPolling) return;
+      isPolling = true;
+
       try {
         const res = await oid4vpService.pollPresentationStatus(transactionId);
-        if (res.status.toUpperCase() === 'SUCCESS') {
+        if (!isActive) return;
+
+        const presentationStatus = res.status.toUpperCase();
+        if (presentationStatus === 'SUCCESS') {
           setStatus('success');
           clearInterval(interval);
-        } else if (res.status.toUpperCase() === 'ERROR') {
+        } else if (presentationStatus === 'ERROR') {
           setStatus('error');
           setErrorMessage(res.errorDescription || 'Ein Fehler ist aufgetreten.');
           clearInterval(interval);
         }
-      } catch {
-        /* ignore polling errors */
+      } catch (error) {
+        console.error('Failed to poll presentation status', error);
+      } finally {
+        isPolling = false;
       }
-    }, 2000);
-    return () => clearInterval(interval);
+    }, PRESENTATION_POLL_INTERVAL_MS);
+
+    return () => {
+      isActive = false;
+      clearInterval(interval);
+    };
   }, [status, transactionId]);
 
   /* ── Main page ── */
@@ -582,7 +332,7 @@ const LoanApplication = () => {
         <header className="loan-header">
           <div className="loan-logo">
             <span className="loan-logo-icon">
-              <Icon.Bank />
+              <Landmark size={18} />
             </span>
             <div>
               <div className="loan-logo-name">SecureBank</div>
@@ -591,15 +341,15 @@ const LoanApplication = () => {
           </div>
           <div className="loan-header-right">
             <span className="loan-header-link">
-              <Icon.Envelope /> Nachrichten
+              <Mail size={16} /> Nachrichten
             </span>
             <span className="loan-header-link">
-              <Icon.Bell /> Benachrichtigungen
+              <Bell size={16} /> Benachrichtigungen
             </span>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <div className="loan-avatar">{initials}</div>
               <span className="loan-username">
-                {userName} <Icon.ChevronDown />
+                {userName} <ChevronDown size={14} />
               </span>
               <button className="loan-logout-btn" onClick={logout}>
                 Abmelden
@@ -613,11 +363,11 @@ const LoanApplication = () => {
           <aside className="loan-sidebar">
             <nav>
               {[
-                { label: 'Übersicht', icon: <Icon.Home /> },
-                { label: 'Konten', icon: <Icon.CreditCard /> },
-                { label: 'Überweisungen', icon: <Icon.ArrowLeftRight /> },
-                { label: 'Daueraufträge', icon: <Icon.Clock /> },
-                { label: 'Karten', icon: <Icon.Card /> },
+                { label: 'Übersicht', icon: <Home size={16} /> },
+                { label: 'Konten', icon: <CreditCard size={16} /> },
+                { label: 'Überweisungen', icon: <ArrowLeftRight size={16} /> },
+                { label: 'Daueraufträge', icon: <Clock size={16} /> },
+                { label: 'Karten', icon: <CreditCard size={16} /> },
               ].map(({ label, icon }) => (
                 <div key={label} className="loan-nav-item">
                   {icon} {label}
@@ -631,9 +381,9 @@ const LoanApplication = () => {
               <div style={{ height: '16px' }} />
 
               {[
-                { label: 'Dokumente', icon: <Icon.File /> },
-                { label: 'Postfach', icon: <Icon.Mail /> },
-                { label: 'Einstellungen', icon: <Icon.Settings /> },
+                { label: 'Dokumente', icon: <File size={16} /> },
+                { label: 'Postfach', icon: <Mail size={16} /> },
+                { label: 'Einstellungen', icon: <Settings size={16} /> },
               ].map(({ label, icon }) => (
                 <div key={label} className="loan-nav-item">
                   {icon} {label}
@@ -648,7 +398,7 @@ const LoanApplication = () => {
                 Wir sind für Sie da.
               </div>
               <button className="loan-contact-btn">
-                <Icon.Phone /> Kontakt aufnehmen
+                <Phone size={14} /> Kontakt aufnehmen
               </button>
             </div>
           </aside>
@@ -708,18 +458,7 @@ const LoanApplication = () => {
                 {status === 'success' ? (
                   <div className="loan-success-box">
                     <div className="loan-success-check">
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
+                      <Check size={18} strokeWidth={3} />
                     </div>
                     <div className="loan-success-greet">Hallo {userName},</div>
                     <div className="loan-success-desc">
@@ -738,7 +477,7 @@ const LoanApplication = () => {
                       sicher und digital über Ihre EUDI-Wallet bereit.
                     </p>
                     <div className="loan-secure-notice">
-                      <Icon.Lock />
+                      <Lock size={14} />
                       Ihre Daten werden verschlüsselt übertragen und ausschließlich für die
                       Kreditprüfung verwendet.
                     </div>
@@ -748,7 +487,7 @@ const LoanApplication = () => {
                       <div className="loan-instructions">
                         <div className="loan-instr-item">
                           <div className="loan-instr-icon">
-                            <Icon.Smartphone />
+                            <Smartphone size={18} />
                           </div>
                           <div>
                             <div className="loan-instr-title">EUDI-Wallet öffnen</div>
@@ -759,7 +498,7 @@ const LoanApplication = () => {
                         </div>
                         <div className="loan-instr-item">
                           <div className="loan-instr-icon">
-                            <Icon.QrCode />
+                            <QrCode size={18} />
                           </div>
                           <div>
                             <div className="loan-instr-title">QR-Code scannen</div>
@@ -770,7 +509,7 @@ const LoanApplication = () => {
                         </div>
                         <div className="loan-instr-item">
                           <div className="loan-instr-icon">
-                            <Icon.FileText />
+                            <FileText size={18} />
                           </div>
                           <div>
                             <div className="loan-instr-title">Gehaltsnachweis übertragen</div>
@@ -805,12 +544,12 @@ const LoanApplication = () => {
                         </div>
                         {status === 'pending' && (
                           <div className="loan-qr-footer">
-                            <Icon.Clock /> Gültig für 5:00 Minuten
+                            <Clock size={16} /> Gültig für 5:00 Minuten
                           </div>
                         )}
                         {status === 'error' && (
                           <button className="loan-refresh-link" onClick={startPresentation}>
-                            <Icon.Refresh /> Code aktualisieren
+                            <RefreshCw size={13} /> Code aktualisieren
                           </button>
                         )}
                       </div>
@@ -821,7 +560,7 @@ const LoanApplication = () => {
                       <span className="loan-footer-hint">
                         Probleme beim Scannen?{' '}
                         <a onClick={startPresentation}>
-                          Code aktualisieren <Icon.Refresh />
+                          Code aktualisieren <RefreshCw size={13} />
                         </a>
                       </span>
                     </div>
@@ -845,7 +584,7 @@ const LoanApplication = () => {
                 ))}
                 <div className="loan-trust-box">
                   <div className="loan-trust-title">
-                    <Icon.Lock /> Sicher &amp; geschützt
+                    <Lock size={14} /> Sicher &amp; geschützt
                   </div>
                   <div className="loan-trust-text">
                     Ihre Daten werden verschlüsselt übertragen und gemäß höchsten
@@ -857,7 +596,7 @@ const LoanApplication = () => {
 
             {/* Bottom action buttons */}
             <div className="loan-actions">
-              <button className="loan-btn-cancel" onClick={() => (window.location.href = '/')}>
+              <button className="loan-btn-cancel" onClick={() => navigate('/')}>
                 Abbrechen
               </button>
               <button
@@ -865,7 +604,7 @@ const LoanApplication = () => {
                 disabled={status !== 'success'}
                 onClick={() => {
                   if (status === 'success') {
-                    window.location.href = '/';
+                    navigate('/');
                   }
                 }}
               >
