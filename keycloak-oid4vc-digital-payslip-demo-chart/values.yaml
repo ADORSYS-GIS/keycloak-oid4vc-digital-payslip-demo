@@ -1,14 +1,14 @@
 globals:
   image: &payslipDemoImage
     repository: ghcr.io/adorsys-gis/keycloak-oid4vc-digital-payslip-demo
-    tag: "1.0.0"
+    tag: '1.0.0'
     pullPolicy: IfNotPresent
   imagePullSecret: &imagePullSecret
     name: ghcr-pull-secret
   ingressHost: &ingressHost digitaler-gehaltsnachweis.eudi-adorsys.com
   tlsHosts: &tlsHosts
-    - "*.eudi-adorsys.com"
-    - "eudi-adorsys.com"
+    - '*.eudi-adorsys.com'
+    - 'eudi-adorsys.com'
 
 app-template:
   global:
@@ -30,11 +30,11 @@ app-template:
         main:
           image: *payslipDemoImage
           env:
-            VITE_API_BASE_URL: "https://digitaler-gehaltsnachweis.eudi-adorsys.com"
-            VITE_KEYCLOAK_URL: "https://keycloak-demo.solutions.adorsys.com"
-            VITE_KEYCLOAK_REALM: "oid4vc-payslip"
-            VITE_KEYCLOAK_CLIENT_ID: "oid4vc-demo-public"
-            VITE_OID4VC_DEFAULT_CREDENTIAL_CONFIGURATION_ID: "PayslipCredential"
+            VITE_API_BASE_URL: 'https://digitaler-gehaltsnachweis.eudi-adorsys.com'
+            VITE_KEYCLOAK_URL: 'https://keycloak-demo.solutions.adorsys.com'
+            VITE_KEYCLOAK_REALM: 'oid4vc-payslip'
+            VITE_KEYCLOAK_CLIENT_ID: 'oid4vc-demo-public'
+            VITE_OID4VC_DEFAULT_CREDENTIAL_CONFIGURATION_ID: 'PayslipCredential'
           ports:
             - name: http
               containerPort: 8080
