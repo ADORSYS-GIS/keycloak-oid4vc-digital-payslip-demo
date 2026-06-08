@@ -1,4 +1,5 @@
 import keycloak from '../config/keycloak.config';
+import { getRuntimeConfig } from '../config/runtime-config';
 
 interface CredentialOfferUriResponse {
   credential_offer_uri?: string;
@@ -16,7 +17,7 @@ export const CredentialConfigurationId = {
 } as const;
 
 export const DEFAULT_CREDENTIAL_CONFIGURATION_ID =
-  import.meta.env.VITE_OID4VC_DEFAULT_CREDENTIAL_CONFIGURATION_ID ||
+  getRuntimeConfig('VITE_OID4VC_DEFAULT_CREDENTIAL_CONFIGURATION_ID') ||
   CredentialConfigurationId.PAYSLIP;
 
 const EndpointType = {
@@ -35,8 +36,8 @@ class Oid4vcService {
   };
 
   private getBaseUrl(): string {
-    const keycloakUrl = import.meta.env.VITE_KEYCLOAK_URL;
-    const realm = import.meta.env.VITE_KEYCLOAK_REALM;
+    const keycloakUrl = getRuntimeConfig('VITE_KEYCLOAK_URL');
+    const realm = getRuntimeConfig('VITE_KEYCLOAK_REALM');
     return `${keycloakUrl}/realms/${realm}`;
   }
 

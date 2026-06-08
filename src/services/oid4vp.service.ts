@@ -1,3 +1,5 @@
+import { getRuntimeConfig } from '../config/runtime-config';
+
 function generateRandomString(length: number): string {
   const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
   const randomValues = new Uint8Array(length);
@@ -49,13 +51,13 @@ const PKCE_CODE_VERIFIER_STORAGE_KEY = 'oid4vp_pkce_code_verifier';
 
 class Oid4vpService {
   private getBaseUrl(): string {
-    const keycloakUrl = import.meta.env.VITE_KEYCLOAK_URL;
-    const realm = import.meta.env.VITE_KEYCLOAK_REALM;
+    const keycloakUrl = getRuntimeConfig('VITE_KEYCLOAK_URL');
+    const realm = getRuntimeConfig('VITE_KEYCLOAK_REALM');
     return `${keycloakUrl}/realms/${realm}`;
   }
 
   private getClientId(): string {
-    return import.meta.env.VITE_KEYCLOAK_CLIENT_ID || 'oid4vc-demo-public';
+    return getRuntimeConfig('VITE_KEYCLOAK_CLIENT_ID', 'oid4vc-demo-public');
   }
 
   storeCodeVerifier(verifier: string): void {

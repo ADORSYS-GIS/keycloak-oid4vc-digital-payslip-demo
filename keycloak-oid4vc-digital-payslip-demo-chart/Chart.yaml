@@ -1,0 +1,11 @@
+apiVersion: v2
+name: keycloak-oid4vc-digital-payslip-demo-chart
+description: Helm chart for the Keycloak OID4VC digital payslip demo
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+
+dependencies:
+  - name: app-template
+    version: '4.6.2'
+    repository: 'https://bjw-s-labs.github.io/helm-charts'

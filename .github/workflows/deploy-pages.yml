@@ -17,9 +17,9 @@ jobs:
   rebuild:
     env:
       VITE_KEYCLOAK_URL: https://keycloak-demo.solutions.adorsys.com
-      VITE_KEYCLOAK_REALM: oid4vc-vci
+      VITE_KEYCLOAK_REALM: oid4vc-payslip
       VITE_KEYCLOAK_CLIENT_ID: oid4vc-demo-public
-      VITE_OID4VC_DEFAULT_CREDENTIAL_CONFIGURATION_ID: DatevCompanyCredential
+      VITE_OID4VC_DEFAULT_CREDENTIAL_CONFIGURATION_ID: PayslipCredential
     runs-on: ubuntu-latest
 
     steps:

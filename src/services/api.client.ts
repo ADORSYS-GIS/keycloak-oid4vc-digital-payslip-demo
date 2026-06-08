@@ -1,4 +1,5 @@
 import keycloak from '../config/keycloak.config';
+import { getRuntimeConfig } from '../config/runtime-config';
 
 interface ApiRequestOptions extends RequestInit {
   requireAuth?: boolean;
@@ -7,7 +8,7 @@ interface ApiRequestOptions extends RequestInit {
 class ApiClient {
   private baseUrl: string;
 
-  constructor(baseUrl: string = import.meta.env.VITE_API_BASE_URL || '') {
+  constructor(baseUrl: string = getRuntimeConfig('VITE_API_BASE_URL')) {
     this.baseUrl = baseUrl;
   }
 
