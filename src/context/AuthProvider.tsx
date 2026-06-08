@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode, useCallback, useRef } from 'react';
 import keycloak from '../config/keycloak.config';
+import { getRuntimeConfig } from '../config/runtime-config';
 import { AuthContext, type UserProfile } from './AuthContext';
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -27,9 +28,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const initKeycloak = useCallback(async () => {
-    const keycloakUrl = import.meta.env.VITE_KEYCLOAK_URL;
-    const realm = import.meta.env.VITE_KEYCLOAK_REALM;
-    const clientId = import.meta.env.VITE_KEYCLOAK_CLIENT_ID;
+    const keycloakUrl = getRuntimeConfig('VITE_KEYCLOAK_URL');
+    const realm = getRuntimeConfig('VITE_KEYCLOAK_REALM');
+    const clientId = getRuntimeConfig('VITE_KEYCLOAK_CLIENT_ID');
 
     if (!keycloakUrl || !realm || !clientId) {
       console.warn(
