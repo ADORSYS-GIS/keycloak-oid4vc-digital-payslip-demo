@@ -1,5 +1,5 @@
-import keycloak from '../config/keycloak.config';
 import { getRuntimeConfig } from '../config/runtime-config';
+import { tokenStore } from './token.store';
 
 interface ApiRequestOptions extends RequestInit {
   requireAuth?: boolean;
@@ -17,14 +17,10 @@ class ApiClient {
       'Content-Type': 'application/json',
     };
 
-    if (requireAuth && keycloak.token) {
-      // Refresh token if needed
-      try {
-        await keycloak.updateToken(5);
-        headers['Authorization'] = `Bearer ${keycloak.token}`;
-      } catch (error) {
-        console.error('Failed to refresh token:', error);
-        keycloak.login();
+    if (requireAuth) {
+      const token = tokenStore.getToken();
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
       }
     }
 
@@ -45,9 +41,6 @@ class ApiClient {
     });
 
     if (!response.ok) {
-      if (response.status === 401) {
-        keycloak.login();
-      }
       throw new Error(`API Error: ${response.statusText}`);
     }
 

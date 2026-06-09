@@ -42,17 +42,14 @@ const PAYSLIP = {
 // ---------------------------------------------------------------------------
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { logout, userProfile } = useAuth();
+  const { isLoading: isAuthLoading } = useAuth();
 
   const [offerDeeplink, setOfferDeeplink] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Derive display name from Keycloak profile
-  const firstName = userProfile?.firstName ?? '';
-  const lastName = userProfile?.lastName ?? '';
-  const fullName = [firstName, lastName].filter(Boolean).join(' ') || 'Mitarbeiter';
-  const initials = `${firstName[0] ?? ''}${lastName[0] ?? ''}`.toUpperCase() || 'M';
+  const fullName = 'Max Mustermann';
+  const initials = 'MM';
 
   const loadOffer = useCallback(async () => {
     setIsLoading(true);
@@ -70,8 +67,11 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    loadOffer();
-  }, [loadOffer]);
+    // Wait for auth to finish before loading the credential offer
+    if (!isAuthLoading) {
+      loadOffer();
+    }
+  }, [isAuthLoading, loadOffer]);
 
   // ---------------------------------------------------------------------------
   // Tab nav items
@@ -178,7 +178,7 @@ const Dashboard = () => {
           ))}
         </nav>
 
-        {/* User avatar + name + logout */}
+        {/* User avatar + name (no logout needed — demo mode) */}
         <div
           className="user-section"
           style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
@@ -206,23 +206,6 @@ const Dashboard = () => {
           >
             {fullName}
           </span>
-          <span style={{ color: '#6b7280', fontSize: '0.75rem' }}>▾</span>
-          <button
-            onClick={logout}
-            style={{
-              marginLeft: '8px',
-              background: 'none',
-              border: '1px solid #d1d5db',
-              color: '#374151',
-              borderRadius: '4px',
-              padding: '4px 10px',
-              cursor: 'pointer',
-              fontSize: '0.75rem',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            Abmelden
-          </button>
         </div>
       </header>
 

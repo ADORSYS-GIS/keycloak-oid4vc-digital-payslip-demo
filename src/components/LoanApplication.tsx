@@ -32,7 +32,7 @@ const PRESENTATION_TIMEOUT_MESSAGE =
 /* ─────────────────────────── component ─────────────────────────── */
 const LoanApplication = () => {
   const navigate = useNavigate();
-  const { userProfile, logout } = useAuth();
+  const { isLoading: isAuthLoading } = useAuth();
   const [qrPayload, setQrPayload] = useState<string | null>(null);
   const [status, setStatus] = useState<'loading' | 'requesting' | 'pending' | 'success' | 'error'>(
     'loading'
@@ -40,17 +40,9 @@ const LoanApplication = () => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [transactionId, setTransactionId] = useState<string | null>(null);
 
-  const userName =
-    userProfile?.firstName && userProfile?.lastName
-      ? `${userProfile.firstName} ${userProfile.lastName}`
-      : userProfile?.username || 'Max Mustermann';
-
-  const initials = userName
-    .split(' ')
-    .map((n: string) => n[0])
-    .join('')
-    .substring(0, 2)
-    .toUpperCase();
+  // Static demo user info (no dynamic profile needed)
+  const userName = 'Max Mustermann';
+  const initials = 'MM';
 
   const startPresentation = async () => {
     setStatus('requesting');
@@ -68,8 +60,11 @@ const LoanApplication = () => {
   };
 
   useEffect(() => {
-    startPresentation();
-  }, []);
+    // Wait for auth to finish before starting the presentation request
+    if (!isAuthLoading) {
+      startPresentation();
+    }
+  }, [isAuthLoading]);
 
   useEffect(() => {
     if (status !== 'pending' || !transactionId) return;
@@ -144,9 +139,6 @@ const LoanApplication = () => {
             <span className="loan-username">
               {userName} <ChevronDown size={14} />
             </span>
-            <button className="loan-logout-btn" onClick={logout}>
-              Abmelden
-            </button>
           </div>
         </div>
       </header>

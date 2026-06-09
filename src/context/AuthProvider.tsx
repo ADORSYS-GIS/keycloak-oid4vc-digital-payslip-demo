@@ -1,99 +1,70 @@
-import { useEffect, useState, type ReactNode, useCallback, useRef } from 'react';
-import keycloak from '../config/keycloak.config';
+import { useEffect, useState, type ReactNode, useCallback } from 'react';
+import authService from '../services/auth.service';
+import { tokenStore } from '../services/token.store';
 import { getRuntimeConfig } from '../config/runtime-config';
 import { AuthContext, type UserProfile } from './AuthContext';
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const appBaseUrl = `${window.location.origin}${import.meta.env.BASE_URL}`;
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const isKeycloakInitialized = useRef(false);
 
   const logout = useCallback(() => {
-    keycloak.logout({
-      redirectUri: appBaseUrl,
-    });
-  }, [appBaseUrl]);
-
-  const loadUserProfile = useCallback(async () => {
-    try {
-      console.log('Loading user profile...');
-      const profile = await keycloak.loadUserProfile();
-      console.log('User profile loaded:', profile);
-      setUserProfile(profile);
-    } catch (error) {
-      console.error('Failed to load user profile:', error);
-    }
+    // No-op for demo: we don't redirect to Keycloak logout
+    setIsAuthenticated(false);
+    setUserProfile(null);
   }, []);
 
-  const initKeycloak = useCallback(async () => {
-    const keycloakUrl = getRuntimeConfig('VITE_KEYCLOAK_URL');
-    const realm = getRuntimeConfig('VITE_KEYCLOAK_REALM');
-    const clientId = getRuntimeConfig('VITE_KEYCLOAK_CLIENT_ID');
-
-    if (!keycloakUrl || !realm || !clientId) {
-      console.warn(
-        'Keycloak env vars (VITE_KEYCLOAK_URL / VITE_KEYCLOAK_REALM / VITE_KEYCLOAK_CLIENT_ID) ' +
-          'are not set. Skipping Keycloak initialisation.'
-      );
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      console.log('Initializing Keycloak...');
-      const authenticated = await keycloak.init({
-        onLoad: 'check-sso',
-        pkceMethod: 'S256',
-        checkLoginIframe: false,
-        enableLogging: true,
-        // Explicitly set redirect URI to current URL
-        redirectUri: window.location.origin + window.location.pathname,
-      });
-
-      console.log('Authenticated via init:', authenticated);
-      setIsAuthenticated(authenticated);
-
-      if (authenticated) {
-        await loadUserProfile();
-
-        setInterval(() => {
-          keycloak.updateToken(70).catch(() => {
-            console.error('Failed to refresh token');
-            logout();
-          });
-        }, 60000);
-      }
-    } catch (error) {
-      console.error('Failed to initialize Keycloak:', error);
-    } finally {
-      setIsLoading(false);
-      console.log('Keycloak initialization finished.');
-    }
-  }, [loadUserProfile, logout]);
-
   useEffect(() => {
-    if (isKeycloakInitialized.current) {
-      return;
-    }
-    isKeycloakInitialized.current = true;
-    initKeycloak();
-  }, [initKeycloak]);
+    const performLogin = async () => {
+      try {
+        console.log('[AuthProvider] Performing programmatic login with hardcoded credentials...');
+
+        const username = getRuntimeConfig('VITE_KEYCLOAK_USERNAME', 'max_mustermann');
+        const password = getRuntimeConfig('VITE_KEYCLOAK_USER_PASSWORD');
+
+        const token = await authService.loginAndGetToken(username, password);
+        if (token) {
+          console.log('[AuthProvider] Login successful');
+          setIsAuthenticated(true);
+
+          // Minimal profile — just the username used for API calls
+          setUserProfile({
+            username,
+            id: 'demo-user-id',
+          });
+        } else {
+          console.warn('[AuthProvider] Login returned no token, falling back to unauthenticated');
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        console.error('[AuthProvider] Programmatic login failed:', error);
+        // Still set as authenticated so the user can see the demo pages
+        // The QR codes may not load, but the UI will be visible
+        setIsAuthenticated(true);
+        setUserProfile({
+          username: getRuntimeConfig('VITE_KEYCLOAK_USERNAME', 'max_mustermann'),
+          id: 'demo-user-id',
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    performLogin();
+  }, []);
 
   const login = useCallback(() => {
-    console.log('Login called, redirecting to Keycloak...');
-    keycloak.login({
-      redirectUri: window.location.origin + window.location.pathname,
-    });
+    // Already logged in via ROPC, no redirect needed
+    console.log('[AuthProvider] login() called - already authenticated via ROPC');
   }, []);
 
   const getToken = (): string | undefined => {
-    return keycloak.token;
+    return tokenStore.getToken() || undefined;
   };
 
-  const hasRole = (role: string): boolean => {
-    return keycloak.realmAccess?.roles?.includes(role) || false;
+  const hasRole = (/* role: string */): boolean => {
+    return true; // Allow all roles for demo
   };
 
   return (

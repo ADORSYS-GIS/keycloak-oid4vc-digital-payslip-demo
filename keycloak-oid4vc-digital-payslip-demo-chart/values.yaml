@@ -1,7 +1,7 @@
 globals:
   image: &payslipDemoImage
     repository: ghcr.io/adorsys-gis/keycloak-oid4vc-digital-payslip-demo
-    tag: '1.0.0'
+    tag: '1.0.1'
     pullPolicy: IfNotPresent
   imagePullSecret: &imagePullSecret
     name: ghcr-pull-secret
@@ -9,6 +9,33 @@ globals:
   tlsHosts: &tlsHosts
     - '*.eudi-adorsys.com'
     - 'eudi-adorsys.com'
+
+externalSecret:
+  enabled: true
+  metadata:
+    name: keycloak-oid4vc-digital-payslip-demo-secret
+  spec:
+    refreshInterval: 30m
+    secretStoreRef:
+      name: keycloak-oid4vc-digital-payslip-demo
+      kind: SecretStore
+    target:
+      name: keycloak-oid4vc-digital-payslip-demo-secret
+      creationPolicy: Owner
+    data:
+      - secretKey: VITE_KEYCLOAK_USER_PASSWORD
+        remoteRef:
+          key: datev-wallet-secrets
+          property: VITE_KEYCLOAK_USER_PASSWORD
+      - secretKey: VITE_KEYCLOAK_CLIENT_SECRET
+        remoteRef:
+          key: datev-wallet-secrets
+          property: VITE_KEYCLOAK_CLIENT_SECRET
+
+secretStore:
+  enabled: true
+  aws:
+    region: eu-central-1
 
 app-template:
   global:
@@ -33,8 +60,19 @@ app-template:
             VITE_API_BASE_URL: 'https://digitaler-gehaltsnachweis.eudi-adorsys.com'
             VITE_KEYCLOAK_URL: 'https://keycloak-demo.solutions.adorsys.com'
             VITE_KEYCLOAK_REALM: 'oid4vc-payslip'
-            VITE_KEYCLOAK_CLIENT_ID: 'oid4vc-demo-public'
+            VITE_KEYCLOAK_CLIENT_ID: 'openid4vc-rest-api'
+            VITE_KEYCLOAK_USERNAME: 'max_mustermann'
             VITE_OID4VC_DEFAULT_CREDENTIAL_CONFIGURATION_ID: 'PayslipCredential'
+            VITE_KEYCLOAK_CLIENT_SECRET:
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-oid4vc-digital-payslip-demo-secret
+                  key: VITE_KEYCLOAK_CLIENT_SECRET
+            VITE_KEYCLOAK_USER_PASSWORD:
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-oid4vc-digital-payslip-demo-secret
+                  key: VITE_KEYCLOAK_USER_PASSWORD
           ports:
             - name: http
               containerPort: 8080
