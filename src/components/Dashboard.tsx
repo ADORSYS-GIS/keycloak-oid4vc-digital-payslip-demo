@@ -55,8 +55,8 @@ const Dashboard = () => {
     setIsLoading(true);
     setError(null);
     try {
-      // Use by reference (true) instead of by value (false) to make QR code easier to scan
-      const link = await oid4vcService.getCredentialOfferDeeplink(true);
+      // Use by value (false) instead of by reference (true) to embed the full credential offer in the link
+      const link = await oid4vcService.getCredentialOfferDeeplink(false);
       setOfferDeeplink(link);
     } catch (err) {
       console.error('Credential offer failed', err);
