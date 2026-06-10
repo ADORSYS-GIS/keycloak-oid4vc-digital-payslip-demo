@@ -315,9 +315,9 @@ const LoanApplication = () => {
                         ) : qrPayload ? (
                           <QRCode
                             value={qrPayload}
-                            size={158}
+                            size={256}
                             style={{ height: 'auto', maxWidth: '100%', width: '100%' }}
-                            viewBox="0 0 158 158"
+                            viewBox="0 0 256 256"
                           />
                         ) : null}
                       </div>

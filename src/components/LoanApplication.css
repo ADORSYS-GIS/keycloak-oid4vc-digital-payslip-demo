@@ -356,8 +356,8 @@ body {
 }
 
 .loan-qr-box {
-  width: 210px;
-  min-width: 210px;
+  width: 330px;
+  min-width: 330px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -372,11 +372,11 @@ body {
   white-space: nowrap;
 }
 .loan-qr-container {
-  width: 178px;
-  height: 178px;
+  width: 296px;
+  height: 296px;
   background: #fff;
   border: 1px solid #e2e8f0;
-  padding: 10px;
+  padding: 20px;
   border-radius: 6px;
   display: flex;
   align-items: center;
@@ -556,10 +556,11 @@ body {
 
 /* Success box inside main card */
 .loan-success-box {
-  background-color: #09090b;
+  background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
   padding: 48px;
-  color: #fff;
+  color: #1e293b;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -582,12 +583,13 @@ body {
   font-weight: 600;
   margin-bottom: 20px;
   font-family: 'Inter', sans-serif;
+  color: #1e293b;
 }
 .loan-success-desc {
   font-size: 18px;
   font-weight: 500;
   line-height: 1.5;
-  color: #e4e4e7;
+  color: #475569;
   font-family: 'Inter', sans-serif;
 }
 .loan-btn-next.active {
