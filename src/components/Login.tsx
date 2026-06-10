@@ -74,7 +74,14 @@ const Login = () => {
               onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#AAE651')}
               title="Gehaltsnachweis als digitalen Nachweis in Ihrer EUDI-Wallet erhalten"
             >
-              <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: 1.3 }}>
+              <span
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  lineHeight: 1.3,
+                }}
+              >
                 <span>Mein</span>
                 <span>Gehaltsnachweis</span>
               </span>

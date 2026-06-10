@@ -320,9 +320,12 @@ body {
 .loan-qr-section {
   display: flex;
   gap: 28px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 .loan-instructions {
   flex: 1;
+  min-width: 280px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -357,7 +360,8 @@ body {
 
 .loan-qr-box {
   width: 330px;
-  min-width: 330px;
+  max-width: 100%;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -369,7 +373,6 @@ body {
   text-align: center;
   margin-bottom: 14px;
   line-height: 1.4;
-  white-space: nowrap;
 }
 .loan-qr-container {
   width: 296px;
