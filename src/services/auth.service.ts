@@ -11,9 +11,7 @@ export class AuthService {
     const realm = getRuntimeConfig('VITE_KEYCLOAK_REALM');
 
     if (!keycloakUrl || !realm) {
-      throw new Error(
-        'Keycloak env vars (VITE_KEYCLOAK_URL / VITE_KEYCLOAK_REALM) are not set.'
-      );
+      throw new Error('Keycloak env vars (VITE_KEYCLOAK_URL / VITE_KEYCLOAK_REALM) are not set.');
     }
 
     this.tokenEndpoint = `${keycloakUrl}/realms/${realm}/protocol/openid-connect/token`;
@@ -25,9 +23,7 @@ export class AuthService {
     const clientSecret = getRuntimeConfig('VITE_KEYCLOAK_CLIENT_SECRET');
 
     if (!clientId) {
-      throw new Error(
-        'Keycloak env vars (VITE_KEYCLOAK_CLIENT_ID) are not set.'
-      );
+      throw new Error('Keycloak env vars (VITE_KEYCLOAK_CLIENT_ID) are not set.');
     }
 
     return { clientId, clientSecret };
