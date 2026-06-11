@@ -12,6 +12,7 @@ export interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   userProfile: UserProfile | null;
+  authError: string | null;
   login: () => void;
   logout: () => void;
   getToken: () => string | undefined;
