@@ -2,7 +2,14 @@ import { useEffect, type CSSProperties } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const DocumentShieldIconLarge = () => (
-  <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginBottom: '24px' }}>
+  <svg
+    width="96"
+    height="96"
+    viewBox="0 0 96 96"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    style={{ marginBottom: '24px' }}
+  >
     {/* Document icon in white stroke */}
     <path
       d="M56 12H28C24.6863 12 22 14.6863 22 18V78C22 81.3137 24.6863 84 28 84H68C71.3137 84 74 81.3137 74 78V30L56 12Z"
@@ -20,24 +27,9 @@ const DocumentShieldIconLarge = () => (
       strokeLinejoin="round"
     />
     {/* Text lines in document */}
-    <path
-      d="M32 40H60"
-      stroke="#9ece50"
-      strokeWidth="3.5"
-      strokeLinecap="round"
-    />
-    <path
-      d="M32 50H50"
-      stroke="#9ece50"
-      strokeWidth="3.5"
-      strokeLinecap="round"
-    />
-    <path
-      d="M32 60H42"
-      stroke="#9ece50"
-      strokeWidth="3.5"
-      strokeLinecap="round"
-    />
+    <path d="M32 40H60" stroke="#9ece50" strokeWidth="3.5" strokeLinecap="round" />
+    <path d="M32 50H50" stroke="#9ece50" strokeWidth="3.5" strokeLinecap="round" />
+    <path d="M32 60H42" stroke="#9ece50" strokeWidth="3.5" strokeLinecap="round" />
 
     {/* Green shield on the bottom right */}
     {/* Shield background circle */}
@@ -140,9 +132,9 @@ const Login = () => {
               lineHeight: 1.6,
             }}
           >
-            Diese Demo zeigt die Ausstellung und Nutzung eines digitalen Gehaltsnachweises mit der EUDI-Wallet.
+            Diese Demo zeigt die Ausstellung und Nutzung eines digitalen Gehaltsnachweises mit der
+            EUDI-Wallet.
           </p>
-
 
           <div
             style={{

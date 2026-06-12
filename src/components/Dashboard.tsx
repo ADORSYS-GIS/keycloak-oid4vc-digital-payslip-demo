@@ -44,7 +44,6 @@ const Dashboard = () => {
   const [error, setError] = useState<string | null>(null);
   const [showMoreDetails, setShowMoreDetails] = useState(false);
 
-
   const fullName = 'Max Mustermann';
   const initials = 'MM';
 
@@ -224,10 +223,27 @@ const Dashboard = () => {
         <h1 style={{ margin: '0 0 4px', fontSize: '2.2rem', fontWeight: 700, color: '#111827' }}>
           Digitaler Gehaltsnachweis
         </h1>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#6b7280', fontSize: '14px', marginBottom: '24px' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            color: '#6b7280',
+            fontSize: '14px',
+            marginBottom: '24px',
+          }}
+        >
           <span>{PAYSLIP.payrollPeriod}</span>
           <span>•</span>
-          <span style={{ color: '#15803d', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+          <span
+            style={{
+              color: '#15803d',
+              fontWeight: 600,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
+            }}
+          >
             <Check size={14} /> Verifiziert von DATEV
           </span>
         </div>
@@ -271,21 +287,25 @@ const Dashboard = () => {
                 gap: '12px',
               }}
             >
-              <div style={{
-                width: '40px',
-                height: '40px',
-                backgroundColor: '#f0fdf4',
-                borderRadius: '50%',
-                color: '#15803d',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-              }}>
+              <div
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  backgroundColor: '#f0fdf4',
+                  borderRadius: '50%',
+                  color: '#15803d',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}
+              >
                 <FileText size={20} />
               </div>
               <div>
-                <h2 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: '#111827' }}>Gehaltsdetails</h2>
+                <h2 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: '#111827' }}>
+                  Gehaltsdetails
+                </h2>
                 <p style={{ margin: '2px 0 0', fontSize: '13px', color: '#6b7280' }}>
                   Die wichtigsten Informationen auf einen Blick.
                 </p>
@@ -304,64 +324,76 @@ const Dashboard = () => {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 {/* Worker */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{
-                    width: '32px',
-                    height: '32px',
-                    backgroundColor: '#f0fdf4',
-                    borderRadius: '50%',
-                    color: '#15803d',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                  }}>
+                  <div
+                    style={{
+                      width: '32px',
+                      height: '32px',
+                      backgroundColor: '#f0fdf4',
+                      borderRadius: '50%',
+                      color: '#15803d',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                    }}
+                  >
                     <User size={16} />
                   </div>
                   <div>
                     <div style={{ fontSize: '11px', color: '#6b7280' }}>Arbeitnehmer</div>
-                    <div style={{ fontSize: '14px', fontWeight: 700, color: '#111827' }}>{fullName}</div>
+                    <div style={{ fontSize: '14px', fontWeight: 700, color: '#111827' }}>
+                      {fullName}
+                    </div>
                   </div>
                 </div>
 
                 {/* Employer */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{
-                    width: '32px',
-                    height: '32px',
-                    backgroundColor: '#f0fdf4',
-                    borderRadius: '50%',
-                    color: '#15803d',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                  }}>
+                  <div
+                    style={{
+                      width: '32px',
+                      height: '32px',
+                      backgroundColor: '#f0fdf4',
+                      borderRadius: '50%',
+                      color: '#15803d',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                    }}
+                  >
                     <Building2 size={16} />
                   </div>
                   <div>
                     <div style={{ fontSize: '11px', color: '#6b7280' }}>Arbeitgeber</div>
-                    <div style={{ fontSize: '14px', fontWeight: 700, color: '#111827' }}>{PAYSLIP.employer}</div>
+                    <div style={{ fontSize: '14px', fontWeight: 700, color: '#111827' }}>
+                      {PAYSLIP.employer}
+                    </div>
                   </div>
                 </div>
 
                 {/* Payroll Period */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{
-                    width: '32px',
-                    height: '32px',
-                    backgroundColor: '#f0fdf4',
-                    borderRadius: '50%',
-                    color: '#15803d',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                  }}>
+                  <div
+                    style={{
+                      width: '32px',
+                      height: '32px',
+                      backgroundColor: '#f0fdf4',
+                      borderRadius: '50%',
+                      color: '#15803d',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                    }}
+                  >
                     <CalendarDays size={16} />
                   </div>
                   <div>
                     <div style={{ fontSize: '11px', color: '#6b7280' }}>Abrechnungszeitraum</div>
-                    <div style={{ fontSize: '14px', fontWeight: 700, color: '#111827' }}>{PAYSLIP.payrollPeriod}</div>
+                    <div style={{ fontSize: '14px', fontWeight: 700, color: '#111827' }}>
+                      {PAYSLIP.payrollPeriod}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -372,14 +404,32 @@ const Dashboard = () => {
               {/* Salaries Grid */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 <div>
-                  <div style={{ fontSize: '12px', color: '#6b7280', fontWeight: 500 }}>Bruttogehalt</div>
-                  <div style={{ fontSize: '18px', fontWeight: 700, color: '#111827', marginTop: '4px' }}>
+                  <div style={{ fontSize: '12px', color: '#6b7280', fontWeight: 500 }}>
+                    Bruttogehalt
+                  </div>
+                  <div
+                    style={{
+                      fontSize: '18px',
+                      fontWeight: 700,
+                      color: '#111827',
+                      marginTop: '4px',
+                    }}
+                  >
                     {PAYSLIP.grossSalary} EUR
                   </div>
                 </div>
                 <div>
-                  <div style={{ fontSize: '12px', color: '#6b7280', fontWeight: 500 }}>Nettogehalt</div>
-                  <div style={{ fontSize: '18px', fontWeight: 700, color: '#15803d', marginTop: '4px' }}>
+                  <div style={{ fontSize: '12px', color: '#6b7280', fontWeight: 500 }}>
+                    Nettogehalt
+                  </div>
+                  <div
+                    style={{
+                      fontSize: '18px',
+                      fontWeight: 700,
+                      color: '#15803d',
+                      marginTop: '4px',
+                    }}
+                  >
                     {PAYSLIP.netSalary} EUR
                   </div>
                 </div>
@@ -387,52 +437,65 @@ const Dashboard = () => {
 
               {/* Badges Row */}
               <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '20px' }}>
-                <div style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '6px 12px',
-                  backgroundColor: '#f0fdf4',
-                  border: '1px solid #bbf7d0',
-                  borderRadius: '6px',
-                  color: '#15803d',
-                  fontSize: '12px',
-                  fontWeight: 500,
-                }}>
+                <div
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '6px 12px',
+                    backgroundColor: '#f0fdf4',
+                    border: '1px solid #bbf7d0',
+                    borderRadius: '6px',
+                    color: '#15803d',
+                    fontSize: '12px',
+                    fontWeight: 500,
+                  }}
+                >
                   <Check size={14} /> Verifiziert
                 </div>
-                <div style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '6px 12px',
-                  backgroundColor: '#f0fdf4',
-                  border: '1px solid #bbf7d0',
-                  borderRadius: '6px',
-                  color: '#15803d',
-                  fontSize: '12px',
-                  fontWeight: 500,
-                }}>
+                <div
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '6px 12px',
+                    backgroundColor: '#f0fdf4',
+                    border: '1px solid #bbf7d0',
+                    borderRadius: '6px',
+                    color: '#15803d',
+                    fontSize: '12px',
+                    fontWeight: 500,
+                  }}
+                >
                   <Lock size={14} /> Digital signiert
                 </div>
-                <div style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '6px 12px',
-                  backgroundColor: '#f0fdf4',
-                  border: '1px solid #bbf7d0',
-                  borderRadius: '6px',
-                  color: '#15803d',
-                  fontSize: '12px',
-                  fontWeight: 500,
-                }}>
+                <div
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '6px 12px',
+                    backgroundColor: '#f0fdf4',
+                    border: '1px solid #bbf7d0',
+                    borderRadius: '6px',
+                    color: '#15803d',
+                    fontSize: '12px',
+                    fontWeight: 500,
+                  }}
+                >
                   <Wallet size={14} /> Wallet-kompatibel
                 </div>
               </div>
 
               {/* Accordion area */}
-              <div style={{ marginTop: 'auto', borderTop: '1px solid #e5e7eb', paddingTop: '16px', textAlign: 'center' }}>
+              <div
+                style={{
+                  marginTop: 'auto',
+                  borderTop: '1px solid #e5e7eb',
+                  paddingTop: '16px',
+                  textAlign: 'center',
+                }}
+              >
                 <button
                   onClick={() => setShowMoreDetails(!showMoreDetails)}
                   style={{
@@ -448,33 +511,62 @@ const Dashboard = () => {
                   }}
                 >
                   {showMoreDetails ? 'Details ausblenden' : 'Weitere Details anzeigen'}
-                  <span style={{
-                    transform: showMoreDetails ? 'rotate(180deg)' : 'none',
-                    transition: 'transform 0.2s',
-                    display: 'inline-flex',
-                  }}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <span
+                    style={{
+                      transform: showMoreDetails ? 'rotate(180deg)' : 'none',
+                      transition: 'transform 0.2s',
+                      display: 'inline-flex',
+                    }}
+                  >
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
                       <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                   </span>
                 </button>
 
                 {showMoreDetails && (
-                  <div style={{
-                    marginTop: '16px',
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gap: '12px 16px',
-                    textAlign: 'left',
-                    padding: '12px 16px',
-                    backgroundColor: '#f8fafc',
-                    borderRadius: '8px',
-                    border: '1px solid #e2e8f0',
-                  }}>
-                    <DetailField icon={<CircleDollarSign size={14} />} label="Währung" value={PAYSLIP.currency} />
-                    <DetailField icon={<Clock size={14} />} label="Ausstellungsdatum" value={PAYSLIP.issueDate} />
-                    <DetailField icon={<CalendarCheck size={14} />} label="Auszahlungsdatum" value={PAYSLIP.paymentDate} />
-                    <DetailField icon={<FileText size={14} />} label="Dokument-ID" value={PAYSLIP.documentId} />
+                  <div
+                    style={{
+                      marginTop: '16px',
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 1fr',
+                      gap: '12px 16px',
+                      textAlign: 'left',
+                      padding: '12px 16px',
+                      backgroundColor: '#f8fafc',
+                      borderRadius: '8px',
+                      border: '1px solid #e2e8f0',
+                    }}
+                  >
+                    <DetailField
+                      icon={<CircleDollarSign size={14} />}
+                      label="Währung"
+                      value={PAYSLIP.currency}
+                    />
+                    <DetailField
+                      icon={<Clock size={14} />}
+                      label="Ausstellungsdatum"
+                      value={PAYSLIP.issueDate}
+                    />
+                    <DetailField
+                      icon={<CalendarCheck size={14} />}
+                      label="Auszahlungsdatum"
+                      value={PAYSLIP.paymentDate}
+                    />
+                    <DetailField
+                      icon={<FileText size={14} />}
+                      label="Dokument-ID"
+                      value={PAYSLIP.documentId}
+                    />
                   </div>
                 )}
               </div>
@@ -497,25 +589,44 @@ const Dashboard = () => {
             }}
           >
             {/* Header info */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '20px' }}>
-              <div style={{
-                width: '40px',
-                height: '40px',
-                backgroundColor: '#f0fdf4',
-                borderRadius: '50%',
-                color: '#15803d',
+            <div
+              style={{
                 display: 'flex',
+                flexDirection: 'column',
                 alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: '12px',
-              }}>
+                textAlign: 'center',
+                marginBottom: '20px',
+              }}
+            >
+              <div
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  backgroundColor: '#f0fdf4',
+                  borderRadius: '50%',
+                  color: '#15803d',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '12px',
+                }}
+              >
                 <Wallet size={20} />
               </div>
               <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 700, color: '#15803d' }}>
                 In EUDI-Wallet übernehmen
               </h2>
-              <p style={{ fontSize: '13px', color: '#6b7280', maxWidth: '300px', marginTop: '6px', lineHeight: 1.4 }}>
-                Scannen Sie den QR-Code mit Ihrer EUDI-Wallet, um diesen Gehaltsnachweis sicher zu übernehmen.
+              <p
+                style={{
+                  fontSize: '13px',
+                  color: '#6b7280',
+                  maxWidth: '300px',
+                  marginTop: '6px',
+                  lineHeight: 1.4,
+                }}
+              >
+                Scannen Sie den QR-Code mit Ihrer EUDI-Wallet, um diesen Gehaltsnachweis sicher zu
+                übernehmen.
               </p>
             </div>
 
@@ -548,7 +659,14 @@ const Dashboard = () => {
               )}
               {!isLoading && error && (
                 <div style={{ textAlign: 'center', padding: '16px' }}>
-                  <p style={{ margin: '0 0 12px', color: '#dc2626', fontSize: '13px', lineHeight: 1.4 }}>
+                  <p
+                    style={{
+                      margin: '0 0 12px',
+                      color: '#dc2626',
+                      fontSize: '13px',
+                      lineHeight: 1.4,
+                    }}
+                  >
                     {error}
                   </p>
                   <button
@@ -589,7 +707,16 @@ const Dashboard = () => {
                     />
                   </div>
 
-                  <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <div
+                    style={{
+                      fontSize: '12px',
+                      color: '#6b7280',
+                      marginTop: '16px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                    }}
+                  >
                     <Clock size={14} /> Gültig für 5:00 Minuten
                   </div>
                 </>
@@ -599,15 +726,20 @@ const Dashboard = () => {
             {/* Bottom notice */}
             <div style={{ marginTop: 'auto' }}>
               <div style={{ height: '1px', backgroundColor: '#e5e7eb', marginBottom: '16px' }} />
-              <div style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '8px',
-                padding: '0 4px',
-              }}>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '8px',
+                  padding: '0 4px',
+                }}
+              >
                 <Lock size={16} color="#15803d" style={{ flexShrink: 0, marginTop: '2px' }} />
-                <span style={{ color: '#6b7280', fontSize: '12px', lineHeight: 1.4, textAlign: 'left' }}>
-                  Ihre Daten werden ausschließlich verschlüsselt übertragen und gemäß höchsten Sicherheitsstandards verarbeitet.
+                <span
+                  style={{ color: '#6b7280', fontSize: '12px', lineHeight: 1.4, textAlign: 'left' }}
+                >
+                  Ihre Daten werden ausschließlich verschlüsselt übertragen und gemäß höchsten
+                  Sicherheitsstandards verarbeitet.
                 </span>
               </div>
             </div>
@@ -646,17 +778,19 @@ const Dashboard = () => {
               e.currentTarget.style.transform = 'translateY(0)';
             }}
           >
-            <div style={{
-              width: '40px',
-              height: '40px',
-              backgroundColor: '#f0fdf4',
-              borderRadius: '50%',
-              color: '#15803d',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-            }}>
+            <div
+              style={{
+                width: '40px',
+                height: '40px',
+                backgroundColor: '#f0fdf4',
+                borderRadius: '50%',
+                color: '#15803d',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}
+            >
               <Landmark size={20} />
             </div>
             <div>
@@ -669,10 +803,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-
       </main>
-
-
 
       {/* Keyframe for spinner */}
       <style>{`

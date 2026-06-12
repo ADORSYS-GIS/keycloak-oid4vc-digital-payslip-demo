@@ -28,16 +28,44 @@ const PRESENTATION_REQUEST_TIMEOUT_MS = 5 * 60 * 1000;
 
 /* ─────────────────────────── component ─────────────────────────── */
 const DocumentShieldIcon = () => (
-  <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginBottom: '8px' }}>
+  <svg
+    width="64"
+    height="64"
+    viewBox="0 0 64 64"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    style={{ marginBottom: '8px' }}
+  >
     {/* Blue document / card container */}
-    <rect x="16" y="10" width="32" height="44" rx="6" fill="#EFF6FF" stroke="#1E40AF" strokeWidth="2.5" />
+    <rect
+      x="16"
+      y="10"
+      width="32"
+      height="44"
+      rx="6"
+      fill="#EFF6FF"
+      stroke="#1E40AF"
+      strokeWidth="2.5"
+    />
     <path d="M22 18H42" stroke="#1E40AF" strokeWidth="2.5" strokeLinecap="round" />
     <path d="M22 26H34" stroke="#1E40AF" strokeWidth="2.5" strokeLinecap="round" />
 
     {/* Green shield badge */}
     <circle cx="44" cy="44" r="10" fill="#FFFFFF" />
-    <path d="M44 36C44 36 50 38.5 50 42.5C50 47.5 44 51 44 51C44 51 38 47.5 38 42.5C38 38.5 44 36 44 36Z" fill="#10B981" stroke="#10B981" strokeWidth="1.2" strokeLinejoin="round" />
-    <path d="M41.5 43.5L43 45L46.5 41" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <path
+      d="M44 36C44 36 50 38.5 50 42.5C50 47.5 44 51 44 51C44 51 38 47.5 38 42.5C38 38.5 44 36 44 36Z"
+      fill="#10B981"
+      stroke="#10B981"
+      strokeWidth="1.2"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M41.5 43.5L43 45L46.5 41"
+      stroke="#FFFFFF"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
 );
 
@@ -97,7 +125,8 @@ const LoanApplication = () => {
     document.title = 'SecureBank';
     const link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
     if (link) {
-      link.href = `data:image/svg+xml,${encodeURIComponent(`
+      link.href = `data:image/svg+xml,${encodeURIComponent(
+        `
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32">
           <circle cx="12" cy="12" r="12" fill="#1e3a8a"/>
           <g transform="translate(4, 4) scale(0.666)" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
@@ -111,7 +140,8 @@ const LoanApplication = () => {
             <line x1="3" y1="8" x2="21" y2="8"></line>
           </g>
         </svg>
-      `.trim())}`;
+      `.trim()
+      )}`;
     }
     // Wait for auth to finish before starting the presentation request
     if (!isAuthLoading) {
@@ -277,7 +307,6 @@ const LoanApplication = () => {
               </div>
             )}
 
-
             {/* Success State / Main Card */}
             {status === 'success' ? (
               <div
@@ -321,17 +350,35 @@ const LoanApplication = () => {
                     Kredit bewilligt
                   </h1>
                   <p style={{ fontSize: '16px', color: '#475569', margin: 0 }}>
-                    Ihr Kredit über <span style={{ color: '#22C55E', fontWeight: 700 }}>10.000 €</span> wurde genehmigt.
+                    Ihr Kredit über{' '}
+                    <span style={{ color: '#22C55E', fontWeight: 700 }}>10.000 €</span> wurde
+                    genehmigt.
                   </p>
                 </div>
 
                 {/* Checked notice */}
                 <div style={{ textAlign: 'center', marginTop: '12px' }}>
-                  <div style={{ color: '#16A34A', fontWeight: 600, fontSize: '16px', marginBottom: '6px' }}>
+                  <div
+                    style={{
+                      color: '#16A34A',
+                      fontWeight: 600,
+                      fontSize: '16px',
+                      marginBottom: '6px',
+                    }}
+                  >
                     Gehaltsnachweis erfolgreich geprüft.
                   </div>
-                  <p style={{ fontSize: '14px', color: '#64748B', maxWidth: '580px', margin: '0 auto', lineHeight: 1.5 }}>
-                    Der von DATEV eG ausgestellte Gehaltsnachweis wurde erfolgreich mit Ihrer EUDI-Wallet verifiziert.
+                  <p
+                    style={{
+                      fontSize: '14px',
+                      color: '#64748B',
+                      maxWidth: '580px',
+                      margin: '0 auto',
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    Der von DATEV eG ausgestellte Gehaltsnachweis wurde erfolgreich mit Ihrer
+                    EUDI-Wallet verifiziert.
                   </p>
                 </div>
 
@@ -375,8 +422,19 @@ const LoanApplication = () => {
                     >
                       <Wallet size={18} />
                     </div>
-                    <span style={{ fontSize: '12px', color: '#64748B', fontWeight: 500 }}>Kreditbetrag</span>
-                    <span style={{ fontSize: '18px', fontWeight: 700, color: '#1E293B', marginTop: '4px' }}>10.000 €</span>
+                    <span style={{ fontSize: '12px', color: '#64748B', fontWeight: 500 }}>
+                      Kreditbetrag
+                    </span>
+                    <span
+                      style={{
+                        fontSize: '18px',
+                        fontWeight: 700,
+                        color: '#1E293B',
+                        marginTop: '4px',
+                      }}
+                    >
+                      10.000 €
+                    </span>
                   </div>
 
                   {/* Column 2: Kreditart */}
@@ -405,8 +463,19 @@ const LoanApplication = () => {
                     >
                       <CalendarDays size={18} />
                     </div>
-                    <span style={{ fontSize: '12px', color: '#64748B', fontWeight: 500 }}>Kreditart</span>
-                    <span style={{ fontSize: '18px', fontWeight: 700, color: '#1E293B', marginTop: '4px' }}>Ratenkredit</span>
+                    <span style={{ fontSize: '12px', color: '#64748B', fontWeight: 500 }}>
+                      Kreditart
+                    </span>
+                    <span
+                      style={{
+                        fontSize: '18px',
+                        fontWeight: 700,
+                        color: '#1E293B',
+                        marginTop: '4px',
+                      }}
+                    >
+                      Ratenkredit
+                    </span>
                   </div>
 
                   {/* Column 3: Laufzeit */}
@@ -435,8 +504,19 @@ const LoanApplication = () => {
                     >
                       <Clock size={18} />
                     </div>
-                    <span style={{ fontSize: '12px', color: '#64748B', fontWeight: 500 }}>Laufzeit</span>
-                    <span style={{ fontSize: '18px', fontWeight: 700, color: '#1E293B', marginTop: '4px' }}>48 Monate</span>
+                    <span style={{ fontSize: '12px', color: '#64748B', fontWeight: 500 }}>
+                      Laufzeit
+                    </span>
+                    <span
+                      style={{
+                        fontSize: '18px',
+                        fontWeight: 700,
+                        color: '#1E293B',
+                        marginTop: '4px',
+                      }}
+                    >
+                      48 Monate
+                    </span>
                   </div>
 
                   {/* Column 4: Status */}
@@ -464,7 +544,9 @@ const LoanApplication = () => {
                     >
                       <Check size={18} strokeWidth={3} />
                     </div>
-                    <span style={{ fontSize: '12px', color: '#64748B', fontWeight: 500 }}>Status</span>
+                    <span style={{ fontSize: '12px', color: '#64748B', fontWeight: 500 }}>
+                      Status
+                    </span>
                     <span
                       style={{
                         display: 'inline-block',
@@ -569,40 +651,54 @@ const LoanApplication = () => {
                     justifyContent: 'center',
                   }}
                 >
-                  <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#1E3A8A', marginBottom: '8px' }}>
+                  <h2
+                    style={{
+                      fontSize: '16px',
+                      fontWeight: 700,
+                      color: '#1E3A8A',
+                      marginBottom: '8px',
+                    }}
+                  >
                     Angeforderte Daten
                   </h2>
-                  <p style={{ fontSize: '13px', color: '#475569', marginBottom: '24px', lineHeight: 1.5 }}>
+                  <p
+                    style={{
+                      fontSize: '13px',
+                      color: '#475569',
+                      marginBottom: '24px',
+                      lineHeight: 1.5,
+                    }}
+                  >
                     SecureBank benötigt folgende Informationen aus Ihrem Gehaltsnachweis:
                   </p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                    {[
-                      'Arbeitgeber',
-                      'Nettogehalt',
-                      'Abrechnungszeitraum',
-                      'Ausstellungsdatum',
-                    ].map((item) => (
-                      <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    {['Arbeitgeber', 'Nettogehalt', 'Abrechnungszeitraum', 'Ausstellungsdatum'].map(
+                      (item) => (
                         <div
-                          style={{
-                            width: '20px',
-                            height: '20px',
-                            backgroundColor: '#DCFCE7',
-                            borderRadius: '50%',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: '#15803D',
-                            flexShrink: 0,
-                          }}
+                          key={item}
+                          style={{ display: 'flex', alignItems: 'center', gap: '12px' }}
                         >
-                          <Check size={12} strokeWidth={3} />
+                          <div
+                            style={{
+                              width: '20px',
+                              height: '20px',
+                              backgroundColor: '#DCFCE7',
+                              borderRadius: '50%',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              color: '#15803D',
+                              flexShrink: 0,
+                            }}
+                          >
+                            <Check size={12} strokeWidth={3} />
+                          </div>
+                          <span style={{ fontSize: '14px', color: '#1E293B', fontWeight: 500 }}>
+                            {item}
+                          </span>
                         </div>
-                        <span style={{ fontSize: '14px', color: '#1E293B', fontWeight: 500 }}>
-                          {item}
-                        </span>
-                      </div>
-                    ))}
+                      )
+                    )}
                   </div>
                 </div>
 
@@ -618,16 +714,40 @@ const LoanApplication = () => {
                     backgroundColor: '#FAFAFA',
                   }}
                 >
-                  <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#1E3A8A', marginBottom: '8px', textAlign: 'center' }}>
+                  <h2
+                    style={{
+                      fontSize: '16px',
+                      fontWeight: 700,
+                      color: '#1E3A8A',
+                      marginBottom: '8px',
+                      textAlign: 'center',
+                    }}
+                  >
                     QR-Code mit Ihrer EUDI-Wallet scannen
                   </h2>
-                  <p style={{ fontSize: '13px', color: '#475569', marginBottom: '24px', lineHeight: 1.5, textAlign: 'center' }}>
+                  <p
+                    style={{
+                      fontSize: '13px',
+                      color: '#475569',
+                      marginBottom: '24px',
+                      lineHeight: 1.5,
+                      textAlign: 'center',
+                    }}
+                  >
                     Nach dem Scannen werden die angeforderten Daten sicher an SecureBank übertragen.
                   </p>
 
                   {/* QR Box */}
                   {status === 'loading' || status === 'requesting' ? (
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '220px' }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        height: '220px',
+                      }}
+                    >
                       <div
                         style={{
                           width: '40px',
@@ -643,8 +763,26 @@ const LoanApplication = () => {
                       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
                     </div>
                   ) : status === 'error' ? (
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '220px', textAlign: 'center', padding: '16px' }}>
-                      <span style={{ color: '#EF4444', fontSize: '13px', fontWeight: 500, marginBottom: '16px', lineHeight: 1.5 }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        height: '220px',
+                        textAlign: 'center',
+                        padding: '16px',
+                      }}
+                    >
+                      <span
+                        style={{
+                          color: '#EF4444',
+                          fontSize: '13px',
+                          fontWeight: 500,
+                          marginBottom: '16px',
+                          lineHeight: 1.5,
+                        }}
+                      >
                         {errorMessage}
                       </span>
                       <button
@@ -685,11 +823,25 @@ const LoanApplication = () => {
                         <QRCode
                           value={qrPayload}
                           size={200}
-                          style={{ height: 'auto', maxWidth: '100%', width: '100%', display: 'block' }}
+                          style={{
+                            height: 'auto',
+                            maxWidth: '100%',
+                            width: '100%',
+                            display: 'block',
+                          }}
                           viewBox="0 0 256 256"
                         />
                       </div>
-                      <div style={{ fontSize: '12px', color: '#64748B', marginTop: '16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <div
+                        style={{
+                          fontSize: '12px',
+                          color: '#64748B',
+                          marginTop: '16px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                        }}
+                      >
                         <Clock size={14} /> Gültig für {formatTime(timeLeft)} Minuten
                       </div>
                     </div>
@@ -714,12 +866,20 @@ const LoanApplication = () => {
                 }}
               >
                 <Lock size={16} color="#1E40AF" style={{ flexShrink: 0 }} />
-                <span style={{ fontSize: '13px', color: '#1E40AF', fontWeight: 500, lineHeight: '1.4', textAlign: 'center' }}>
-                  Ihre Daten werden ausschließlich verschlüsselt übertragen und gemäß höchsten Sicherheitsstandards verarbeitet.
+                <span
+                  style={{
+                    fontSize: '13px',
+                    color: '#1E40AF',
+                    fontWeight: 500,
+                    lineHeight: '1.4',
+                    textAlign: 'center',
+                  }}
+                >
+                  Ihre Daten werden ausschließlich verschlüsselt übertragen und gemäß höchsten
+                  Sicherheitsstandards verarbeitet.
                 </span>
               </div>
             )}
-
 
             {/* Why do we need this Accordion */}
             {status !== 'success' && (
@@ -758,12 +918,13 @@ const LoanApplication = () => {
                       textAlign: 'center',
                     }}
                   >
-                    Um Ihren Kreditantrag schnell und ohne Papierkram prüfen zu können, benötigen wir eine verifizierte Bestätigung Ihres Einkommens. Über die EUDI-Wallet können Sie diese Daten direkt von Ihrem Gehaltsnachweis sicher und digital übermitteln.
+                    Um Ihren Kreditantrag schnell und ohne Papierkram prüfen zu können, benötigen
+                    wir eine verifizierte Bestätigung Ihres Einkommens. Über die EUDI-Wallet können
+                    Sie diese Daten direkt von Ihrem Gehaltsnachweis sicher und digital übermitteln.
                   </p>
                 )}
               </div>
             )}
-
           </div>
         </main>
       </div>
