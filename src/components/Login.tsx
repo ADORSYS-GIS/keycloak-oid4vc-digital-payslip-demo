@@ -1,8 +1,76 @@
-import type { CSSProperties } from 'react';
+import { useEffect, type CSSProperties } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+const DocumentShieldIconLarge = () => (
+  <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginBottom: '24px' }}>
+    {/* Document icon in white stroke */}
+    <path
+      d="M56 12H28C24.6863 12 22 14.6863 22 18V78C22 81.3137 24.6863 84 28 84H68C71.3137 84 74 81.3137 74 78V30L56 12Z"
+      stroke="#FFFFFF"
+      strokeWidth="3.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    {/* Folded corner line */}
+    <path
+      d="M56 12V30H74"
+      stroke="#FFFFFF"
+      strokeWidth="3.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    {/* Text lines in document */}
+    <path
+      d="M32 40H60"
+      stroke="#9ece50"
+      strokeWidth="3.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M32 50H50"
+      stroke="#9ece50"
+      strokeWidth="3.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M32 60H42"
+      stroke="#9ece50"
+      strokeWidth="3.5"
+      strokeLinecap="round"
+    />
+
+    {/* Green shield on the bottom right */}
+    {/* Shield background circle */}
+    <circle cx="68" cy="68" r="16" fill="#1F3D52" />
+    {/* Shield path */}
+    <path
+      d="M68 56C68 56 78 59 78 66C78 74 68 80 68 80C68 80 58 74 58 66C58 59 68 56 68 56Z"
+      fill="#9ece50"
+      stroke="#9ece50"
+      strokeWidth="2"
+      strokeLinejoin="round"
+    />
+    {/* Checkmark inside shield */}
+    <path
+      d="M63.5 67.5L66.5 70.5L72.5 63.5"
+      stroke="#1F3D52"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 
 const Login = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = 'Mein Gehaltsnachweis';
+    const link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
+    if (link) {
+      link.href = `${import.meta.env.BASE_URL}datev.png`;
+    }
+  }, []);
   return (
     <div
       style={{
@@ -40,28 +108,48 @@ const Login = () => {
         <div
           style={{
             width: 'min(760px, 100%)',
-            transform: 'translateY(6vh)',
+            transform: 'translateY(-2vh)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
+          <DocumentShieldIconLarge />
+
           <h1
             style={{
               margin: '0 0 24px',
               fontFamily: 'Georgia, "Times New Roman", serif',
-              fontSize: 'clamp(1.85rem, 3vw, 2.55rem)',
+              fontSize: 'clamp(2.2rem, 3.5vw, 3.2rem)',
               lineHeight: 1.15,
               fontWeight: 700,
               color: '#fff',
             }}
           >
-            Willkommen bei der EUDI-Gehaltsnachweis-Demo
+            Vom Gehaltsnachweis
+            <br />
+            zum Kreditantrag
           </h1>
+
+          <p
+            style={{
+              fontSize: '17px',
+              color: '#d1d5db',
+              maxWidth: '560px',
+              margin: '0 auto 56px',
+              lineHeight: 1.6,
+            }}
+          >
+            Diese Demo zeigt die Ausstellung und Nutzung eines digitalen Gehaltsnachweises mit der EUDI-Wallet.
+          </p>
+
 
           <div
             style={{
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              gap: '86px',
+              gap: '40px',
               flexWrap: 'wrap',
             }}
           >
@@ -70,8 +158,14 @@ const Login = () => {
               type="button"
               style={demoButtonStyle}
               onClick={() => navigate('/dashboard')}
-              onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#9adb3c')}
-              onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#AAE651')}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = '#8cb83f';
+                e.currentTarget.style.borderColor = '#7fa834';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = '#9ece50';
+                e.currentTarget.style.borderColor = '#8cb83f';
+              }}
               title="Gehaltsnachweis als digitalen Nachweis in Ihrer EUDI-Wallet erhalten"
             >
               <span
@@ -91,8 +185,14 @@ const Login = () => {
               style={demoButtonStyle}
               title="Demo-Platzhalter fuer den Verifikationsablauf eines Kreditantrags"
               onClick={() => navigate('/kreditantrag')}
-              onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#9adb3c')}
-              onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#AAE651')}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = '#8cb83f';
+                e.currentTarget.style.borderColor = '#7fa834';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = '#9ece50';
+                e.currentTarget.style.borderColor = '#8cb83f';
+              }}
             >
               <span
                 style={{
@@ -156,17 +256,24 @@ const Login = () => {
 };
 
 const demoButtonStyle: CSSProperties = {
-  width: '220px',
-  minHeight: '52px',
-  padding: '11px 16px',
-  fontSize: '0.88rem',
-  backgroundColor: '#AAE651',
+  width: '280px',
+  height: '76px',
+  display: 'inline-flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: '12px 24px',
+  fontSize: '1.05rem',
+  backgroundColor: '#9ece50',
   color: '#000',
-  border: '1px solid #9adb3c',
-  borderRadius: '4px',
+  border: '1px solid #8cb83f',
+  borderRadius: '8px',
   cursor: 'pointer',
   fontWeight: 700,
-  boxShadow: '0 10px 24px rgba(0, 0, 0, 0.18)',
+  boxShadow: '0 12px 28px rgba(0, 0, 0, 0.22)',
+  boxSizing: 'border-box',
+  flexShrink: 0,
+  transition: 'all 0.2s ease',
 };
 
 export default Login;
