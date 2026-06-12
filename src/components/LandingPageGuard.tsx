@@ -5,6 +5,7 @@ import { getRuntimeConfig } from '../config/runtime-config';
 const S_CODE_VERIFIER = 'lpg_code_verifier';
 const S_ACCESS_TOKEN = 'lpg_access_token';
 const S_TOKEN_EXPIRY = 'lpg_token_expiry';
+const S_ID_TOKEN = 'lpg_id_token';
 
 // ─── PKCE helpers ──────────────────────────────────────────────────────────
 function generateRandomString(length: number): string {
@@ -42,6 +43,7 @@ function getStoredToken(): string | null {
   if (Date.now() >= parseInt(expiry, 10) - 30_000) {
     sessionStorage.removeItem(S_ACCESS_TOKEN);
     sessionStorage.removeItem(S_TOKEN_EXPIRY);
+    sessionStorage.removeItem(S_ID_TOKEN);
     return null;
   }
   return token;
@@ -142,6 +144,9 @@ export default function LandingPageGuard({ children }: LandingPageGuardProps) {
 
           const data = await res.json();
           storeToken(data.access_token, data.expires_in ?? 300);
+          if (data.id_token) {
+            sessionStorage.setItem(S_ID_TOKEN, data.id_token);
+          }
 
           // Clean up the callback params from the URL without a page reload
           window.history.replaceState({}, document.title, window.location.pathname);

@@ -1,5 +1,6 @@
 import { useEffect, type CSSProperties } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getRuntimeConfig } from '../config/runtime-config';
 
 const DocumentShieldIconLarge = () => (
   <svg
@@ -63,6 +64,38 @@ const Login = () => {
       link.href = `${import.meta.env.BASE_URL}datev.png`;
     }
   }, []);
+
+  const handleLogout = () => {
+    const keycloakUrl = getRuntimeConfig('VITE_KEYCLOAK_URL');
+    const realm = getRuntimeConfig('VITE_KEYCLOAK_REALM');
+    const clientId = getRuntimeConfig('VITE_KEYCLOAK_CLIENT_ID');
+
+    const idToken = sessionStorage.getItem('lpg_id_token');
+
+    // Clear local session storage
+    sessionStorage.removeItem('lpg_access_token');
+    sessionStorage.removeItem('lpg_token_expiry');
+    sessionStorage.removeItem('lpg_id_token');
+    sessionStorage.removeItem('lpg_code_verifier');
+
+    if (keycloakUrl && realm) {
+      const authBase = `${keycloakUrl}/realms/${realm}/protocol/openid-connect`;
+      const redirectUri = `${window.location.origin}${window.location.pathname}`;
+
+      const logoutParams = new URLSearchParams();
+      if (idToken) {
+        logoutParams.append('id_token_hint', idToken);
+        logoutParams.append('post_logout_redirect_uri', redirectUri);
+      } else {
+        logoutParams.append('client_id', clientId);
+        logoutParams.append('post_logout_redirect_uri', redirectUri);
+      }
+
+      window.location.href = `${authBase}/logout?${logoutParams.toString()}`;
+    } else {
+      window.location.reload();
+    }
+  };
   return (
     <div
       style={{
@@ -75,6 +108,56 @@ const Login = () => {
         overflow: 'hidden',
       }}
     >
+      {/* Abmelden (Logout) button in the top-right corner */}
+      <button
+        type="button"
+        onClick={handleLogout}
+        style={{
+          position: 'absolute',
+          top: '32px',
+          right: '32px',
+          padding: '10px 20px',
+          backgroundColor: 'rgba(255, 255, 255, 0.08)',
+          color: '#e5e7eb',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          borderRadius: '20px',
+          cursor: 'pointer',
+          fontWeight: 600,
+          fontSize: '0.85rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          zIndex: 10,
+          transition: 'all 0.2s ease',
+        }}
+        onMouseOver={(e) => {
+          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)';
+          e.currentTarget.style.color = '#fff';
+          e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.4)';
+        }}
+        onMouseOut={(e) => {
+          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+          e.currentTarget.style.color = '#e5e7eb';
+          e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+        }}
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+          <polyline points="16 17 21 12 16 7" />
+          <line x1="21" y1="12" x2="9" y2="12" />
+        </svg>
+        Abmelden
+      </button>
+
       <img
         src={`${import.meta.env.BASE_URL}datev.png`}
         alt="Datev logo"
