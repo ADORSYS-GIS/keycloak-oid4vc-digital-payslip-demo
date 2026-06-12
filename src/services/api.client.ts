@@ -1,8 +1,13 @@
-import keycloak from '../config/keycloak.config';
 import { getRuntimeConfig } from '../config/runtime-config';
+import { tokenStore } from './token.store';
+import authService from './auth.service';
 
 interface ApiRequestOptions extends RequestInit {
   requireAuth?: boolean;
+  /**
+   * Internal flag to prevent infinite retry loops on 401.
+   */
+  _isRetry?: boolean;
 }
 
 class ApiClient {
@@ -17,14 +22,10 @@ class ApiClient {
       'Content-Type': 'application/json',
     };
 
-    if (requireAuth && keycloak.token) {
-      // Refresh token if needed
-      try {
-        await keycloak.updateToken(5);
-        headers['Authorization'] = `Bearer ${keycloak.token}`;
-      } catch (error) {
-        console.error('Failed to refresh token:', error);
-        keycloak.login();
+    if (requireAuth) {
+      const token = tokenStore.getToken();
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
       }
     }
 
@@ -44,10 +45,26 @@ class ApiClient {
       },
     });
 
-    if (!response.ok) {
-      if (response.status === 401) {
-        keycloak.login();
+    // Handle 401 Unauthorized — attempt to refresh the token and retry once
+    if (response.status === 401 && requireAuth && !options._isRetry) {
+      console.warn('[ApiClient] Received 401, attempting token refresh...');
+
+      const newToken = await authService.refreshAccessToken();
+
+      if (newToken) {
+        console.log('[ApiClient] Token refreshed, retrying request...');
+        // Retry the request with the new token
+        return this.request<T>(endpoint, {
+          ...options,
+          _isRetry: true,
+        });
       }
+
+      console.error('[ApiClient] Token refresh failed, cannot retry request.');
+      throw new Error('API Error: Unauthorized - Token refresh failed');
+    }
+
+    if (!response.ok) {
       throw new Error(`API Error: ${response.statusText}`);
     }
 

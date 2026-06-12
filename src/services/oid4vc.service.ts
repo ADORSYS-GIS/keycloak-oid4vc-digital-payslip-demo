@@ -1,5 +1,5 @@
-import keycloak from '../config/keycloak.config';
 import { getRuntimeConfig } from '../config/runtime-config';
+import { tokenStore } from './token.store';
 
 interface CredentialOfferUriResponse {
   credential_offer_uri?: string;
@@ -42,17 +42,20 @@ class Oid4vcService {
   }
 
   private async getAuthHeaders(): Promise<HeadersInit> {
-    // Ensure token is fresh
-    await keycloak.updateToken(5);
+    const token = tokenStore.getToken();
+    if (!token) {
+      throw new Error('No access token available. Please login first.');
+    }
 
     return {
-      Authorization: `Bearer ${keycloak.token}`,
+      Authorization: `Bearer ${token}`,
       Accept: 'application/json',
     };
   }
 
   private getUsername(): string {
-    return keycloak.tokenParsed?.preferred_username || '';
+    // This is the user for whom the credential offer is created
+    return getRuntimeConfig('VITE_KEYCLOAK_USERNAME', 'max_mustermann');
   }
 
   private getErrorMessage(error: unknown): string {

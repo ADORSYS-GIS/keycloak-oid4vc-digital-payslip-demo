@@ -74,7 +74,17 @@ const Login = () => {
               onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#AAE651')}
               title="Gehaltsnachweis als digitalen Nachweis in Ihrer EUDI-Wallet erhalten"
             >
-              Mein Gehaltsnachweis
+              <span
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  lineHeight: 1.3,
+                }}
+              >
+                <span>Mein</span>
+                <span>Gehaltsnachweis</span>
+              </span>
             </button>
             <button
               type="button"
@@ -84,7 +94,16 @@ const Login = () => {
               onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#9adb3c')}
               onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#AAE651')}
             >
-              Kreditantrag
+              <span
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  lineHeight: 1.3,
+                }}
+              >
+                <span>Kreditantrag</span>
+              </span>
             </button>
           </div>
         </div>
@@ -137,8 +156,8 @@ const Login = () => {
 };
 
 const demoButtonStyle: CSSProperties = {
-  width: '192px',
-  minHeight: '42px',
+  width: '220px',
+  minHeight: '52px',
   padding: '11px 16px',
   fontSize: '0.88rem',
   backgroundColor: '#AAE651',
