@@ -8,8 +8,7 @@ const S_TOKEN_EXPIRY = 'lpg_token_expiry';
 
 // ─── PKCE helpers ──────────────────────────────────────────────────────────
 function generateRandomString(length: number): string {
-  const charset =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
+  const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
   const bytes = new Uint8Array(length);
   window.crypto.getRandomValues(bytes);
   return Array.from(bytes)
@@ -18,10 +17,7 @@ function generateRandomString(length: number): string {
 }
 
 async function sha256(plain: string): Promise<ArrayBuffer> {
-  return window.crypto.subtle.digest(
-    'SHA-256',
-    new TextEncoder().encode(plain)
-  );
+  return window.crypto.subtle.digest('SHA-256', new TextEncoder().encode(plain));
 }
 
 function base64urlEncode(buf: ArrayBuffer): string {
@@ -102,10 +98,7 @@ export default function LandingPageGuard({ children }: LandingPageGuardProps) {
       // ── 2. Keycloak returned an error ───────────────────────────────────
       if (errorParam) {
         console.error('[LandingPageGuard] Error from Keycloak:', errorParam);
-        setError(
-          'Anmeldung fehlgeschlagen: ' +
-          (params.get('error_description') ?? errorParam)
-        );
+        setError('Anmeldung fehlgeschlagen: ' + (params.get('error_description') ?? errorParam));
         setIsLoading(false);
         return;
       }
@@ -151,11 +144,7 @@ export default function LandingPageGuard({ children }: LandingPageGuardProps) {
           storeToken(data.access_token, data.expires_in ?? 300);
 
           // Clean up the callback params from the URL without a page reload
-          window.history.replaceState(
-            {},
-            document.title,
-            window.location.pathname
-          );
+          window.history.replaceState({}, document.title, window.location.pathname);
 
           console.log('[LandingPageGuard] Authentication successful.');
           setIsAuthenticated(true);
@@ -214,9 +203,7 @@ export default function LandingPageGuard({ children }: LandingPageGuardProps) {
               animation: 'spin 1s linear infinite',
             }}
           />
-          <p style={{ margin: 0, fontSize: '0.9rem' }}>
-            Verbindung wird hergestellt…
-          </p>
+          <p style={{ margin: 0, fontSize: '0.9rem' }}>Verbindung wird hergestellt…</p>
           <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
         </div>
       </div>
