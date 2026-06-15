@@ -4,13 +4,21 @@ import Dashboard from './components/Dashboard';
 import LoanApplication from './components/LoanApplication';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthProvider';
+import LandingPageGuard from './components/LandingPageGuard';
 
 function App() {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Routes>
-        {/* Public landing page – no Keycloak init */}
-        <Route path="/" element={<Login />} />
+        {/* Protected landing page – wrapped behind Keycloak redirect login */}
+        <Route
+          path="/"
+          element={
+            <LandingPageGuard>
+              <Login />
+            </LandingPageGuard>
+          }
+        />
 
         {/* Protected area – Keycloak is initialised only when the user
             navigates here (i.e. after clicking a button on the landing page) */}

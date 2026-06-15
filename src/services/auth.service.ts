@@ -18,26 +18,22 @@ export class AuthService {
     return this.tokenEndpoint;
   }
 
-  private getClientCredentials() {
+  private getClientId(): string {
     const clientId = getRuntimeConfig('VITE_KEYCLOAK_CLIENT_ID');
-    const clientSecret = getRuntimeConfig('VITE_KEYCLOAK_CLIENT_SECRET');
 
     if (!clientId) {
       throw new Error('Keycloak env vars (VITE_KEYCLOAK_CLIENT_ID) are not set.');
     }
 
-    return { clientId, clientSecret };
+    return clientId;
   }
 
   async loginAndGetToken(username: string, password: string): Promise<string> {
     const tokenEndpoint = this.getTokenEndpoint();
-    const { clientId, clientSecret } = this.getClientCredentials();
+    const clientId = this.getClientId();
 
     const params = new URLSearchParams();
     params.append('client_id', clientId);
-    if (clientSecret) {
-      params.append('client_secret', clientSecret);
-    }
     params.append('username', username);
     params.append('password', password);
     params.append('grant_type', 'password');
@@ -67,11 +63,14 @@ export class AuthService {
     }
 
     const data = await response.json();
+    if (!data.access_token) {
+      throw new Error('Access token is missing from token response.');
+    }
     this.storeTokenData(data);
 
     console.log(
       '[AuthService] Access Token retrieved successfully (first 20 chars):',
-      data.access_token?.substring(0, 20) + '...'
+      data.access_token.substring(0, 20) + '...'
     );
     return data.access_token;
   }
@@ -88,13 +87,10 @@ export class AuthService {
     }
 
     const tokenEndpoint = this.getTokenEndpoint();
-    const { clientId, clientSecret } = this.getClientCredentials();
+    const clientId = this.getClientId();
 
     const params = new URLSearchParams();
     params.append('client_id', clientId);
-    if (clientSecret) {
-      params.append('client_secret', clientSecret);
-    }
     params.append('refresh_token', refreshToken);
     params.append('grant_type', 'refresh_token');
 
@@ -123,11 +119,14 @@ export class AuthService {
       }
 
       const data = await response.json();
+      if (!data.access_token) {
+        throw new Error('Access token is missing from token response.');
+      }
       this.storeTokenData(data);
 
       console.log(
         '[AuthService] Access Token refreshed successfully (first 20 chars):',
-        data.access_token?.substring(0, 20) + '...'
+        data.access_token.substring(0, 20) + '...'
       );
       return data.access_token;
     } catch (error) {

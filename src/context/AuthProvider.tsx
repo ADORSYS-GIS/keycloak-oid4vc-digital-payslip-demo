@@ -100,6 +100,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const performLogin = async () => {
       try {
+        if (tokenStore.getToken() && !tokenStore.isTokenExpired()) {
+          console.log('[AuthProvider] Valid stored token found, skipping programmatic login.');
+          setIsAuthenticated(true);
+          setAuthError(null);
+          setUserProfile({
+            username: getRuntimeConfig('VITE_KEYCLOAK_USERNAME', 'max_mustermann'),
+            id: 'demo-user-id',
+          });
+          scheduleTokenRefresh();
+          return;
+        }
+
         console.log('[AuthProvider] Performing programmatic login with hardcoded credentials...');
 
         const username = getRuntimeConfig('VITE_KEYCLOAK_USERNAME', 'max_mustermann');
@@ -139,6 +151,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           username: getRuntimeConfig('VITE_KEYCLOAK_USERNAME', 'max_mustermann'),
           id: 'demo-user-id',
         });
+
+        // Redirect to landing page to trigger login
+        console.warn('[AuthProvider] Redirecting to landing page for login.');
+        window.location.href = `${window.location.origin}${import.meta.env.BASE_URL}`;
       } finally {
         setIsLoading(false);
       }

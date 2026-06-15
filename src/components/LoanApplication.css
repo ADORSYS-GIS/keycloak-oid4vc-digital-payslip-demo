@@ -112,6 +112,26 @@ body {
   background: #f1f5f9;
   color: #1e293b;
 }
+.loan-nav-item.active {
+  color: #1e3a8a;
+  font-weight: 700;
+  position: relative;
+}
+.loan-nav-item.active:hover {
+  color: #1e3a8a;
+  background: #f1f5f9;
+}
+.loan-nav-item.active::before {
+  content: '•';
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #1e3a8a;
+  line-height: 1;
+}
+
 .loan-nav-group {
   font-size: 13px;
   font-weight: 600;

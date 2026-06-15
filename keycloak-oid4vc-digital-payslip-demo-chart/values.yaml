@@ -1,7 +1,7 @@
 globals:
   image: &payslipDemoImage
     repository: ghcr.io/adorsys-gis/keycloak-oid4vc-digital-payslip-demo
-    tag: '1.0.4'
+    tag: '1.0.8'
     pullPolicy: IfNotPresent
   imagePullSecret: &imagePullSecret
     name: ghcr-pull-secret
@@ -27,10 +27,6 @@ externalSecret:
         remoteRef:
           key: datev-wallet-secrets
           property: VITE_KEYCLOAK_USER_PASSWORD
-      - secretKey: VITE_KEYCLOAK_CLIENT_SECRET
-        remoteRef:
-          key: datev-wallet-secrets
-          property: VITE_KEYCLOAK_CLIENT_SECRET
 
 secretStore:
   enabled: true
@@ -60,14 +56,9 @@ app-template:
             VITE_API_BASE_URL: 'https://digitaler-gehaltsnachweis.eudi-adorsys.com'
             VITE_KEYCLOAK_URL: 'https://keycloak-demo.solutions.adorsys.com'
             VITE_KEYCLOAK_REALM: 'oid4vc-payslip'
-            VITE_KEYCLOAK_CLIENT_ID: 'openid4vc-rest-api'
+            VITE_KEYCLOAK_CLIENT_ID: 'oid4vc-demo-public'
             VITE_KEYCLOAK_USERNAME: 'max_mustermann'
             VITE_OID4VC_DEFAULT_CREDENTIAL_CONFIGURATION_ID: 'PayslipCredential'
-            VITE_KEYCLOAK_CLIENT_SECRET:
-              valueFrom:
-                secretKeyRef:
-                  name: keycloak-oid4vc-digital-payslip-demo-secret
-                  key: VITE_KEYCLOAK_CLIENT_SECRET
             VITE_KEYCLOAK_USER_PASSWORD:
               valueFrom:
                 secretKeyRef:

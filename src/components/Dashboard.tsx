@@ -7,20 +7,15 @@ import {
   User,
   Wallet,
   Building2,
-  Banknote,
   CalendarDays,
   CircleDollarSign,
   Clock,
   CalendarCheck,
   FileText,
-  ShieldCheck,
   Landmark,
-  Home,
-  Building,
-  Briefcase,
   ArrowLeft,
   Check,
-  Shield,
+  Lock,
 } from 'lucide-react';
 
 // ---------------------------------------------------------------------------
@@ -29,7 +24,7 @@ import {
 const PAYSLIP = {
   payrollPeriod: 'April 2026',
   employer: 'Beispiel GmbH',
-  issueDate: '21.05.2026',
+  issueDate: '30.04.2026',
   documentId: 'PAY-2026-04-12345',
   grossSalary: '5.000,00',
   netSalary: '3.200,00',
@@ -47,6 +42,7 @@ const Dashboard = () => {
   const [offerDeeplink, setOfferDeeplink] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showMoreDetails, setShowMoreDetails] = useState(false);
 
   const fullName = 'Max Mustermann';
   const initials = 'MM';
@@ -67,6 +63,11 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
+    document.title = 'Mein Gehaltsnachweis';
+    const link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
+    if (link) {
+      link.href = `${import.meta.env.BASE_URL}datev.png`;
+    }
     // Wait for auth to finish before loading the credential offer
     if (!isAuthLoading) {
       loadOffer();
@@ -80,32 +81,6 @@ const Dashboard = () => {
     { key: 'uebersicht', label: 'Übersicht', active: false },
     { key: 'gehaltsnachweise', label: 'Gehaltsnachweise', active: true },
     { key: 'verlauf', label: 'Verlauf', active: false },
-  ];
-
-  // ---------------------------------------------------------------------------
-  // Use-case tiles shown at the bottom
-  // ---------------------------------------------------------------------------
-  const useCases = [
-    {
-      icon: <Landmark size={28} strokeWidth={1.5} />,
-      title: 'Kredit & Finanzierung',
-      sub: 'Bei Banken und Finanzinstituten',
-    },
-    {
-      icon: <Home size={28} strokeWidth={1.5} />,
-      title: 'Mietvertrag',
-      sub: 'Als Einkommensnachweis für Vermieter',
-    },
-    {
-      icon: <Building size={28} strokeWidth={1.5} />,
-      title: 'Behörden & Ämter',
-      sub: 'Für Anträge und Verwaltungsprozesse',
-    },
-    {
-      icon: <Briefcase size={28} strokeWidth={1.5} />,
-      title: 'Weitere Services',
-      sub: 'Überall dort, wo ein Gehaltsnachweis benötigt wird',
-    },
   ];
 
   // ---------------------------------------------------------------------------
@@ -168,7 +143,7 @@ const Dashboard = () => {
                 color: t.active ? '#111827' : '#6b7280',
                 fontWeight: t.active ? 600 : 400,
                 fontSize: '0.9rem',
-                borderBottom: t.active ? '3px solid #9ece50' : '3px solid transparent',
+                borderBottom: t.active ? '3px solid #15803d' : '3px solid transparent',
                 cursor: 'default',
                 userSelect: 'none',
               }}
@@ -245,39 +220,33 @@ const Dashboard = () => {
         </button>
 
         {/* Title row */}
+        <h1 style={{ margin: '0 0 4px', fontSize: '2.2rem', fontWeight: 700, color: '#111827' }}>
+          Digitaler Gehaltsnachweis
+        </h1>
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '12px',
-            flexWrap: 'wrap',
-            marginBottom: '4px',
+            gap: '8px',
+            color: '#6b7280',
+            fontSize: '14px',
+            marginBottom: '24px',
           }}
         >
-          <h1 style={{ margin: 0, fontSize: '1.6rem', fontWeight: 700 }}>
-            Gehaltsnachweis – {PAYSLIP.payrollPeriod}
-          </h1>
+          <span>{PAYSLIP.payrollPeriod}</span>
+          <span>•</span>
           <span
             style={{
+              color: '#15803d',
+              fontWeight: 600,
               display: 'inline-flex',
               alignItems: 'center',
               gap: '4px',
-              padding: '2px 10px',
-              backgroundColor: '#f5faee',
-              border: '1px solid #e3f0ce',
-              borderRadius: '999px',
-              color: '#4a701b',
-              fontSize: '0.75rem',
-              fontWeight: 600,
             }}
           >
-            <Check size={14} /> Verifiziert
+            <Check size={14} /> Verifiziert von DATEV
           </span>
         </div>
-        <p style={{ margin: '0 0 16px', color: '#6b7280', fontSize: '0.85rem' }}>
-          Dieser Gehaltsnachweis wurde von {PAYSLIP.employer} ausgestellt und ist digital
-          verifiziert.
-        </p>
 
         {/* ---------------------------------------------------------------- */}
         {/* Two-column body                                                   */}
@@ -286,171 +255,320 @@ const Dashboard = () => {
           className="content-grid"
           style={{
             display: 'grid',
-            gridTemplateColumns: '1fr 340px',
-            gap: '16px',
+            gridTemplateColumns: '1fr 380px',
+            gap: '24px',
             alignItems: 'stretch',
           }}
         >
           {/* ------------------------------------------------------------ */}
-          {/* LEFT COLUMN: Gehaltsdetails + Wofür tiles                    */}
+          {/* LEFT COLUMN: Gehaltsdetails + Verwendung                     */}
           {/* ------------------------------------------------------------ */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {/* Payslip details card */}
+          {/* ------------------------------------------------------------ */}
+          {/* LEFT: Gehaltsdetails                                         */}
+          {/* ------------------------------------------------------------ */}
+          <div
+            style={{
+              backgroundColor: '#fff',
+              borderRadius: '12px',
+              border: '1px solid #e5e7eb',
+              overflow: 'hidden',
+              display: 'flex',
+              flexDirection: 'column',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.02)',
+            }}
+          >
+            {/* Header */}
             <div
               style={{
-                backgroundColor: '#fff',
-                borderRadius: '12px',
-                border: '1px solid #e5e7eb',
-                overflow: 'hidden',
+                padding: '20px 24px',
+                borderBottom: '1px solid #e5e7eb',
                 display: 'flex',
-                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '12px',
               }}
             >
               <div
                 style={{
-                  padding: '12px 20px',
-                  borderBottom: '1px solid #e5e7eb',
+                  width: '40px',
+                  height: '40px',
+                  backgroundColor: '#f0fdf4',
+                  borderRadius: '50%',
+                  color: '#15803d',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
+                  justifyContent: 'center',
+                  flexShrink: 0,
                 }}
               >
-                <FileText size={18} color="#4b5563" />
-                <h2 style={{ margin: 0, fontSize: '1rem', fontWeight: 700 }}>Gehaltsdetails</h2>
+                <FileText size={20} />
               </div>
+              <div>
+                <h2 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: '#111827' }}>
+                  Gehaltsdetails
+                </h2>
+                <p style={{ margin: '2px 0 0', fontSize: '13px', color: '#6b7280' }}>
+                  Die wichtigsten Informationen auf einen Blick.
+                </p>
+              </div>
+            </div>
+
+            {/* Body */}
+            <div
+              style={{
+                padding: '24px',
+                display: 'flex',
+                flexDirection: 'column',
+                flex: 1,
+              }}
+            >
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {/* Worker */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div
+                    style={{
+                      width: '32px',
+                      height: '32px',
+                      backgroundColor: '#f0fdf4',
+                      borderRadius: '50%',
+                      color: '#15803d',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <User size={16} />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '11px', color: '#6b7280' }}>Arbeitnehmer</div>
+                    <div style={{ fontSize: '14px', fontWeight: 700, color: '#111827' }}>
+                      {fullName}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Employer */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div
+                    style={{
+                      width: '32px',
+                      height: '32px',
+                      backgroundColor: '#f0fdf4',
+                      borderRadius: '50%',
+                      color: '#15803d',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <Building2 size={16} />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '11px', color: '#6b7280' }}>Arbeitgeber</div>
+                    <div style={{ fontSize: '14px', fontWeight: 700, color: '#111827' }}>
+                      {PAYSLIP.employer}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Payroll Period */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div
+                    style={{
+                      width: '32px',
+                      height: '32px',
+                      backgroundColor: '#f0fdf4',
+                      borderRadius: '50%',
+                      color: '#15803d',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <CalendarDays size={16} />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '11px', color: '#6b7280' }}>Abrechnungszeitraum</div>
+                    <div style={{ fontSize: '14px', fontWeight: 700, color: '#111827' }}>
+                      {PAYSLIP.payrollPeriod}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Horizontal line */}
+              <div style={{ height: '1px', backgroundColor: '#e5e7eb', margin: '20px 0' }} />
+
+              {/* Salaries Grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <div>
+                  <div style={{ fontSize: '12px', color: '#6b7280', fontWeight: 500 }}>
+                    Bruttogehalt
+                  </div>
+                  <div
+                    style={{
+                      fontSize: '18px',
+                      fontWeight: 700,
+                      color: '#111827',
+                      marginTop: '4px',
+                    }}
+                  >
+                    {PAYSLIP.grossSalary} EUR
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '12px', color: '#6b7280', fontWeight: 500 }}>
+                    Nettogehalt
+                  </div>
+                  <div
+                    style={{
+                      fontSize: '18px',
+                      fontWeight: 700,
+                      color: '#15803d',
+                      marginTop: '4px',
+                    }}
+                  >
+                    {PAYSLIP.netSalary} EUR
+                  </div>
+                </div>
+              </div>
+
+              {/* Badges Row */}
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '20px' }}>
+                <div
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '6px 12px',
+                    backgroundColor: '#f0fdf4',
+                    border: '1px solid #bbf7d0',
+                    borderRadius: '6px',
+                    color: '#15803d',
+                    fontSize: '12px',
+                    fontWeight: 500,
+                  }}
+                >
+                  <Check size={14} /> Verifiziert
+                </div>
+                <div
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '6px 12px',
+                    backgroundColor: '#f0fdf4',
+                    border: '1px solid #bbf7d0',
+                    borderRadius: '6px',
+                    color: '#15803d',
+                    fontSize: '12px',
+                    fontWeight: 500,
+                  }}
+                >
+                  <Lock size={14} /> Digital signiert
+                </div>
+                <div
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '6px 12px',
+                    backgroundColor: '#f0fdf4',
+                    border: '1px solid #bbf7d0',
+                    borderRadius: '6px',
+                    color: '#15803d',
+                    fontSize: '12px',
+                    fontWeight: 500,
+                  }}
+                >
+                  <Wallet size={14} /> Wallet-kompatibel
+                </div>
+              </div>
+
+              {/* Accordion area */}
               <div
                 style={{
-                  padding: '20px 24px',
-                  flex: 1,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
+                  marginTop: 'auto',
+                  borderTop: '1px solid #e5e7eb',
+                  paddingTop: '16px',
+                  textAlign: 'center',
                 }}
               >
-                <div
-                  className="details-grid"
-                  style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 24px' }}
+                <button
+                  onClick={() => setShowMoreDetails(!showMoreDetails)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: '#475569',
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                  }}
                 >
-                  <DetailField icon={<User size={16} />} label="Arbeitnehmer" value={fullName} />
-                  <DetailField
-                    icon={<Wallet size={16} />}
-                    label="Bruttogehalt"
-                    value={`${PAYSLIP.grossSalary} EUR`}
-                  />
-                  <DetailField
-                    icon={<Building2 size={16} />}
-                    label="Arbeitgeber"
-                    value={PAYSLIP.employer}
-                  />
-                  <DetailField
-                    icon={<Banknote size={16} />}
-                    label="Nettogehalt"
-                    value={`${PAYSLIP.netSalary} EUR`}
-                    valueColor="#4a701b"
-                  />
-                  <DetailField
-                    icon={<CalendarDays size={16} />}
-                    label="Abrechnungszeitraum"
-                    value={PAYSLIP.payrollPeriod}
-                  />
-                  <DetailField
-                    icon={<CircleDollarSign size={16} />}
-                    label="Währung"
-                    value={PAYSLIP.currency}
-                  />
-                  <DetailField
-                    icon={<Clock size={16} />}
-                    label="Ausstellungsdatum"
-                    value={PAYSLIP.issueDate}
-                  />
-                  <DetailField
-                    icon={<CalendarCheck size={16} />}
-                    label="Auszahlungsdatum"
-                    value={PAYSLIP.paymentDate}
-                  />
-                  <div style={{ gridColumn: '1 / -1' }}>
+                  {showMoreDetails ? 'Details ausblenden' : 'Weitere Details anzeigen'}
+                  <span
+                    style={{
+                      transform: showMoreDetails ? 'rotate(180deg)' : 'none',
+                      transition: 'transform 0.2s',
+                      display: 'inline-flex',
+                    }}
+                  >
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </span>
+                </button>
+
+                {showMoreDetails && (
+                  <div
+                    style={{
+                      marginTop: '16px',
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 1fr',
+                      gap: '12px 16px',
+                      textAlign: 'left',
+                      padding: '12px 16px',
+                      backgroundColor: '#f8fafc',
+                      borderRadius: '8px',
+                      border: '1px solid #e2e8f0',
+                    }}
+                  >
                     <DetailField
-                      icon={<FileText size={16} />}
+                      icon={<CircleDollarSign size={14} />}
+                      label="Währung"
+                      value={PAYSLIP.currency}
+                    />
+                    <DetailField
+                      icon={<Clock size={14} />}
+                      label="Ausstellungsdatum"
+                      value={PAYSLIP.issueDate}
+                    />
+                    <DetailField
+                      icon={<CalendarCheck size={14} />}
+                      label="Auszahlungsdatum"
+                      value={PAYSLIP.paymentDate}
+                    />
+                    <DetailField
+                      icon={<FileText size={14} />}
                       label="Dokument-ID"
                       value={PAYSLIP.documentId}
                     />
                   </div>
-                </div>
-                <div
-                  style={{
-                    marginTop: '16px',
-                    padding: '10px 14px',
-                    backgroundColor: '#f8fafc',
-                    border: '1px solid #e2e8f0',
-                    borderRadius: '8px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: '12px',
-                    flexWrap: 'wrap',
-                  }}
-                >
-                  <span
-                    style={{
-                      color: '#3b82f6',
-                      fontSize: '0.8rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                    }}
-                  >
-                    <Shield size={14} /> Dieser Nachweis ist qualifiziert elektronisch signiert und
-                    stammt von {PAYSLIP.employer}.
-                  </span>
-                  <button
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      color: '#3b82f6',
-                      fontSize: '0.8rem',
-                      fontWeight: 600,
-                      padding: 0,
-                    }}
-                  >
-                    Details anzeigen
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Wofür tiles */}
-            <div>
-              <h3 style={{ margin: '0 0 10px', fontSize: '0.95rem', fontWeight: 700 }}>
-                Wofür können Sie diesen Nachweis verwenden?
-              </h3>
-              <div
-                className="use-cases-grid"
-                style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}
-              >
-                {useCases.map((uc) => (
-                  <div
-                    key={uc.title}
-                    style={{
-                      backgroundColor: '#fff',
-                      border: '1px solid #e5e7eb',
-                      borderRadius: '8px',
-                      padding: '12px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'flex-start',
-                      gap: '6px',
-                    }}
-                  >
-                    <div style={{ color: '#374151', marginBottom: '4px' }}>{uc.icon}</div>
-                    <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#111827' }}>
-                      {uc.title}
-                    </span>
-                    <span style={{ fontSize: '0.72rem', color: '#6b7280', lineHeight: 1.3 }}>
-                      {uc.sub}
-                    </span>
-                  </div>
-                ))}
+                )}
               </div>
             </div>
           </div>
@@ -460,237 +578,232 @@ const Dashboard = () => {
           {/* ------------------------------------------------------------ */}
           <div
             style={{
-              backgroundColor: '#f5faee',
+              backgroundColor: '#fff',
               borderRadius: '12px',
-              border: '1px solid #e3f0ce',
+              border: '1px solid #e5e7eb',
               overflow: 'hidden',
               display: 'flex',
               flexDirection: 'column',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.02)',
+              padding: '24px',
+            }}
+          >
+            {/* Header info */}
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center',
+                marginBottom: '20px',
+              }}
+            >
+              <div
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  backgroundColor: '#f0fdf4',
+                  borderRadius: '50%',
+                  color: '#15803d',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '12px',
+                }}
+              >
+                <Wallet size={20} />
+              </div>
+              <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 700, color: '#15803d' }}>
+                In EUDI-Wallet übernehmen
+              </h2>
+              <p
+                style={{
+                  fontSize: '13px',
+                  color: '#6b7280',
+                  maxWidth: '300px',
+                  marginTop: '6px',
+                  lineHeight: 1.4,
+                }}
+              >
+                Scannen Sie den QR-Code mit Ihrer EUDI-Wallet, um diesen Gehaltsnachweis sicher zu
+                übernehmen.
+              </p>
+            </div>
+
+            {/* QR Code section */}
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flex: 1,
+                margin: '12px 0 24px',
+              }}
+            >
+              {isLoading && (
+                <div style={{ textAlign: 'center', color: '#6b7280' }}>
+                  <div
+                    style={{
+                      width: '32px',
+                      height: '32px',
+                      margin: '0 auto 8px',
+                      border: '3px solid #e5e7eb',
+                      borderTop: '3px solid #15803d',
+                      borderRadius: '50%',
+                      animation: 'spin 1s linear infinite',
+                    }}
+                  />
+                  <p style={{ margin: 0, fontSize: '13px' }}>QR-Code wird geladen…</p>
+                </div>
+              )}
+              {!isLoading && error && (
+                <div style={{ textAlign: 'center', padding: '16px' }}>
+                  <p
+                    style={{
+                      margin: '0 0 12px',
+                      color: '#dc2626',
+                      fontSize: '13px',
+                      lineHeight: 1.4,
+                    }}
+                  >
+                    {error}
+                  </p>
+                  <button
+                    onClick={loadOffer}
+                    style={{
+                      backgroundColor: '#15803d',
+                      color: '#fff',
+                      border: 'none',
+                      padding: '8px 16px',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      fontSize: '13px',
+                      fontWeight: 600,
+                    }}
+                  >
+                    Erneut versuchen
+                  </button>
+                </div>
+              )}
+              {!isLoading && !error && offerDeeplink && (
+                <>
+                  <div
+                    className="qr-code-wrapper"
+                    style={{
+                      backgroundColor: '#fff',
+                      padding: '4px',
+                      width: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <QRCode
+                      value={offerDeeplink}
+                      size={180}
+                      style={{ height: 'auto', maxWidth: '100%', width: '100%', display: 'block' }}
+                      viewBox="0 0 256 256"
+                    />
+                  </div>
+
+                  <div
+                    style={{
+                      fontSize: '12px',
+                      color: '#6b7280',
+                      marginTop: '16px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                    }}
+                  >
+                    <Clock size={14} /> Gültig für 5:00 Minuten
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Bottom notice */}
+            <div style={{ marginTop: 'auto' }}>
+              <div style={{ height: '1px', backgroundColor: '#e5e7eb', marginBottom: '16px' }} />
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '8px',
+                  padding: '0 4px',
+                }}
+              >
+                <Lock size={16} color="#15803d" style={{ flexShrink: 0, marginTop: '2px' }} />
+                <span
+                  style={{ color: '#6b7280', fontSize: '12px', lineHeight: 1.4, textAlign: 'left' }}
+                >
+                  Ihre Daten werden ausschließlich verschlüsselt übertragen und gemäß höchsten
+                  Sicherheitsstandards verarbeitet.
+                </span>
+              </div>
+            </div>
+          </div>
+          {/* end content-grid */}
+        </div>
+
+        {/* ---------------------------------------------------------------- */}
+        {/* Verwendung — full width below both columns                       */}
+        {/* ---------------------------------------------------------------- */}
+        <div style={{ marginTop: '24px' }}>
+          <h3 style={{ margin: '0 0 12px', fontSize: '15px', fontWeight: 700, color: '#1f2937' }}>
+            Verwendung in diesem Demo-Szenario
+          </h3>
+
+          <div
+            onClick={() => navigate('/kreditantrag')}
+            style={{
+              backgroundColor: '#fff',
+              border: '1px solid #e5e7eb',
+              borderRadius: '12px',
+              padding: '16px 20px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px',
+              cursor: 'pointer',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.02)',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.boxShadow = '0 6px 16px rgba(0,0,0,0.06)';
+              e.currentTarget.style.transform = 'translateY(-1px)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.02)';
+              e.currentTarget.style.transform = 'translateY(0)';
             }}
           >
             <div
               style={{
-                padding: '16px 16px 8px 16px',
+                width: '40px',
+                height: '40px',
+                backgroundColor: '#f0fdf4',
+                borderRadius: '50%',
+                color: '#15803d',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '8px',
+                justifyContent: 'center',
+                flexShrink: 0,
               }}
             >
-              <ShieldCheck size={18} color="#4a701b" />
-              <h2 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, color: '#4a701b' }}>
-                In EUDI-Wallet übernehmen
-              </h2>
+              <Landmark size={20} />
             </div>
-
-            <div
-              style={{
-                padding: '8px 16px 16px 16px',
-                flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <p
-                style={{
-                  margin: '0 0 10px',
-                  color: '#3b5914',
-                  fontSize: '0.82rem',
-                  lineHeight: 1.3,
-                }}
-              >
-                Scannen Sie den QR-Code mit Ihrer EUDI-Wallet, um diesen Gehaltsnachweis sicher zu
-                erhalten.
-              </p>
-
-              {/* QR code — flex:1 makes this box absorb the remaining height */}
-              <div
-                style={{
-                  backgroundColor: '#fff',
-                  borderRadius: '8px',
-                  padding: '10px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flex: 1,
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.04)',
-                }}
-              >
-                {isLoading && (
-                  <div style={{ textAlign: 'center', color: '#6b7280' }}>
-                    <div
-                      style={{
-                        width: '32px',
-                        height: '32px',
-                        margin: '0 auto 8px',
-                        border: '3px solid #e5e7eb',
-                        borderTop: '3px solid #9ece50',
-                        borderRadius: '50%',
-                        animation: 'spin 1s linear infinite',
-                      }}
-                    />
-                    <p style={{ margin: 0, fontSize: '0.75rem' }}>QR-Code wird geladen…</p>
-                  </div>
-                )}
-                {!isLoading && error && (
-                  <div style={{ textAlign: 'center' }}>
-                    <p style={{ margin: '0 0 8px', color: '#dc2626', fontSize: '0.8rem' }}>
-                      {error}
-                    </p>
-                    <button
-                      onClick={loadOffer}
-                      style={{
-                        backgroundColor: '#4C7B16',
-                        color: '#fff',
-                        border: 'none',
-                        padding: '6px 12px',
-                        borderRadius: '6px',
-                        cursor: 'pointer',
-                        fontSize: '0.8rem',
-                        fontWeight: 600,
-                      }}
-                    >
-                      Erneut versuchen
-                    </button>
-                  </div>
-                )}
-                {!isLoading && !error && offerDeeplink && (
-                  <>
-                    <div
-                      className="qr-code-wrapper"
-                      style={{
-                        backgroundColor: '#fff',
-                        padding: '6px',
-                        borderRadius: '6px',
-                        width: '100%',
-                      }}
-                    >
-                      <QRCode
-                        value={offerDeeplink}
-                        size={256}
-                        style={{ height: 'auto', maxWidth: '100%', width: '100%' }}
-                        viewBox="0 0 256 256"
-                      />
-                    </div>
-                    <button
-                      onClick={loadOffer}
-                      style={{
-                        marginTop: '8px',
-                        background: 'none',
-                        border: '1px solid #9ece50',
-                        color: '#4a701b',
-                        borderRadius: '6px',
-                        padding: '6px 12px',
-                        cursor: 'pointer',
-                        fontSize: '0.8rem',
-                        fontWeight: 600,
-                        transition: 'background-color 0.2s, color 0.2s',
-                        width: '100%',
-                        textAlign: 'center',
-                      }}
-                      onMouseOver={(e) => {
-                        e.currentTarget.style.backgroundColor = '#9ece50';
-                        e.currentTarget.style.color = '#fff';
-                      }}
-                      onMouseOut={(e) => {
-                        e.currentTarget.style.backgroundColor = 'transparent';
-                        e.currentTarget.style.color = '#4a701b';
-                      }}
-                    >
-                      Code aktualisieren
-                    </button>
-                  </>
-                )}
+            <div>
+              <div style={{ fontSize: '15px', fontWeight: 700, color: '#1E3A8A' }}>
+                Kreditantrag bei SecureBank
               </div>
-
-              {/* Steps */}
-              <ol
-                style={{
-                  margin: '10px 0 0',
-                  padding: 0,
-                  listStyle: 'none',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '5px',
-                }}
-              >
-                {[
-                  'Öffnen Sie Ihre EUDI-Wallet App',
-                  'Wählen Sie „QR-Code scannen"',
-                  'Scannen Sie diesen Code',
-                  'Prüfen und übernehmen Sie den Gehaltsnachweis',
-                ].map((step, i) => (
-                  <li
-                    key={i}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'flex-start',
-                      gap: '8px',
-                      fontSize: '0.78rem',
-                      color: '#374151',
-                    }}
-                  >
-                    <span
-                      style={{
-                        flexShrink: 0,
-                        width: '18px',
-                        height: '18px',
-                        borderRadius: '50%',
-                        backgroundColor: '#4C7B16',
-                        color: '#fff',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '0.65rem',
-                        fontWeight: 700,
-                      }}
-                    >
-                      {i + 1}
-                    </span>
-                    {step}
-                  </li>
-                ))}
-              </ol>
-
-              {/* Trust note */}
-              <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <ShieldCheck size={14} color="#4a701b" />
-                <span style={{ color: '#4a701b', fontSize: '0.75rem', fontWeight: 600 }}>
-                  Sicher. Verifiziert. In Ihrer Kontrolle.
-                </span>
+              <div style={{ fontSize: '13px', color: '#6b7280', marginTop: '2px' }}>
+                Übermittlung Ihres Gehaltsnachweises für die Kreditprüfung.
               </div>
             </div>
           </div>
         </div>
       </main>
-
-      {/* ------------------------------------------------------------------ */}
-      {/* Footer                                                               */}
-      {/* ------------------------------------------------------------------ */}
-      <footer
-        style={{
-          borderTop: '1px solid #e5e7eb',
-          padding: '10px 24px',
-          textAlign: 'center',
-          color: '#9ca3af',
-          fontSize: '0.75rem',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '6px',
-          flexShrink: 0,
-        }}
-      >
-        <ShieldCheck size={14} />
-        <span>
-          Dieser Service wird bereitgestellt von DATEV. Rechtliche Hinweise und Datenschutz finden
-          Sie in unserer{' '}
-          <a href="#" style={{ color: '#039A9A', textDecoration: 'underline' }}>
-            Datenschutzerklärung
-          </a>
-          .
-        </span>
-      </footer>
 
       {/* Keyframe for spinner */}
       <style>{`
