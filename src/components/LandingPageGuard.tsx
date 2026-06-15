@@ -2,19 +2,28 @@ import { useEffect, useState, useRef, type ReactNode } from 'react';
 import { getRuntimeConfig } from '../config/runtime-config';
 
 // ─── sessionStorage keys ───────────────────────────────────────────────────
-const S_CODE_VERIFIER = 'lpg_code_verifier';
-const S_ACCESS_TOKEN = 'lpg_access_token';
-const S_TOKEN_EXPIRY = 'lpg_token_expiry';
-const S_ID_TOKEN = 'lpg_id_token';
+export const S_CODE_VERIFIER = 'lpg_code_verifier';
+export const S_ACCESS_TOKEN = 'lpg_access_token';
+export const S_TOKEN_EXPIRY = 'lpg_token_expiry';
+export const S_REFRESH_TOKEN = 'lpg_refresh_token';
+export const S_ID_TOKEN = 'lpg_id_token';
 
 // ─── PKCE helpers ──────────────────────────────────────────────────────────
 function generateRandomString(length: number): string {
   const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
-  const bytes = new Uint8Array(length);
-  window.crypto.getRandomValues(bytes);
-  return Array.from(bytes)
-    .map((b) => charset[b % charset.length])
-    .join('');
+  const maxValidByte = 256 - (256 % charset.length);
+  let result = '';
+  const tempBuffer = new Uint8Array(Math.ceil(length * 1.5));
+  while (result.length < length) {
+    window.crypto.getRandomValues(tempBuffer);
+    for (let i = 0; i < tempBuffer.length && result.length < length; i++) {
+      const b = tempBuffer[i];
+      if (b < maxValidByte) {
+        result += charset[b % charset.length];
+      }
+    }
+  }
+  return result;
 }
 
 async function sha256(plain: string): Promise<ArrayBuffer> {
@@ -43,6 +52,7 @@ function getStoredToken(): string | null {
   if (Date.now() >= parseInt(expiry, 10) - 30_000) {
     sessionStorage.removeItem(S_ACCESS_TOKEN);
     sessionStorage.removeItem(S_TOKEN_EXPIRY);
+    sessionStorage.removeItem(S_REFRESH_TOKEN);
     sessionStorage.removeItem(S_ID_TOKEN);
     return null;
   }
@@ -72,7 +82,6 @@ export default function LandingPageGuard({ children }: LandingPageGuardProps) {
     const keycloakUrl = getRuntimeConfig('VITE_KEYCLOAK_URL');
     const realm = getRuntimeConfig('VITE_KEYCLOAK_REALM');
     const clientId = getRuntimeConfig('VITE_KEYCLOAK_CLIENT_ID');
-    const clientSecret = getRuntimeConfig('VITE_KEYCLOAK_CLIENT_SECRET');
 
     if (!keycloakUrl || !realm || !clientId) {
       setError('Keycloak-Konfiguration fehlt.');
@@ -124,11 +133,9 @@ export default function LandingPageGuard({ children }: LandingPageGuardProps) {
             redirect_uri: redirectUri,
             code_verifier: verifier,
           });
-          // *** This is the key difference vs keycloak-js ***
-          // Confidential clients require the secret in the token request.
-          if (clientSecret) {
-            body.append('client_secret', clientSecret);
-          }
+          // *** Security Update ***
+          // We removed the client_secret here. SPAs should be Public Clients
+          // and rely purely on PKCE (which we are already using above).
 
           console.log('[LandingPageGuard] Exchanging authorization code for tokens…');
           const res = await fetch(`${authBase}/token`, {
@@ -143,7 +150,13 @@ export default function LandingPageGuard({ children }: LandingPageGuardProps) {
           }
 
           const data = await res.json();
+          if (!data.access_token) {
+            throw new Error('Access token is missing from token response.');
+          }
           storeToken(data.access_token, data.expires_in ?? 300);
+          if (data.refresh_token) {
+            sessionStorage.setItem(S_REFRESH_TOKEN, data.refresh_token);
+          }
           if (data.id_token) {
             sessionStorage.setItem(S_ID_TOKEN, data.id_token);
           }

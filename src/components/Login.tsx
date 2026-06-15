@@ -1,6 +1,13 @@
 import { useEffect, type CSSProperties } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getRuntimeConfig } from '../config/runtime-config';
+import {
+  S_ACCESS_TOKEN,
+  S_TOKEN_EXPIRY,
+  S_ID_TOKEN,
+  S_CODE_VERIFIER,
+  S_REFRESH_TOKEN,
+} from './LandingPageGuard';
 
 const DocumentShieldIconLarge = () => (
   <svg
@@ -70,13 +77,14 @@ const Login = () => {
     const realm = getRuntimeConfig('VITE_KEYCLOAK_REALM');
     const clientId = getRuntimeConfig('VITE_KEYCLOAK_CLIENT_ID');
 
-    const idToken = sessionStorage.getItem('lpg_id_token');
+    const idToken = sessionStorage.getItem(S_ID_TOKEN);
 
     // Clear local session storage
-    sessionStorage.removeItem('lpg_access_token');
-    sessionStorage.removeItem('lpg_token_expiry');
-    sessionStorage.removeItem('lpg_id_token');
-    sessionStorage.removeItem('lpg_code_verifier');
+    sessionStorage.removeItem(S_ACCESS_TOKEN);
+    sessionStorage.removeItem(S_TOKEN_EXPIRY);
+    sessionStorage.removeItem(S_REFRESH_TOKEN);
+    sessionStorage.removeItem(S_ID_TOKEN);
+    sessionStorage.removeItem(S_CODE_VERIFIER);
 
     if (keycloakUrl && realm) {
       const authBase = `${keycloakUrl}/realms/${realm}/protocol/openid-connect`;

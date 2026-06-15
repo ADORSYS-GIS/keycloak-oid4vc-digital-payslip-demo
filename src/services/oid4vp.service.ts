@@ -2,11 +2,19 @@ import { getRuntimeConfig } from '../config/runtime-config';
 
 function generateRandomString(length: number): string {
   const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
-  const randomValues = new Uint8Array(length);
-  window.crypto.getRandomValues(randomValues);
-  return Array.from(randomValues)
-    .map((x) => charset[x % charset.length])
-    .join('');
+  const maxValidByte = 256 - (256 % charset.length);
+  let result = '';
+  const tempBuffer = new Uint8Array(Math.ceil(length * 1.5));
+  while (result.length < length) {
+    window.crypto.getRandomValues(tempBuffer);
+    for (let i = 0; i < tempBuffer.length && result.length < length; i++) {
+      const b = tempBuffer[i];
+      if (b < maxValidByte) {
+        result += charset[b % charset.length];
+      }
+    }
+  }
+  return result;
 }
 
 async function sha256(plain: string): Promise<ArrayBuffer> {
